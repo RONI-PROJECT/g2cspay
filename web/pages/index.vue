@@ -257,7 +257,7 @@ const copied = ref(false)
 
 const snippets = computed<Record<string, string>>(() => ({
   cURL: `curl -X POST ${apiBase.value}/api/v1/charge \\
-  -u CSPay-API-xxxxxxxx: \\
+  -u rp_live_xxxxxxxx: \\
   -H "Content-Type: application/json" \\
   -d '{
     "payment_type": "qris",
@@ -271,7 +271,7 @@ const snippets = computed<Record<string, string>>(() => ({
   Node: `const res = await fetch("${apiBase.value}/api/v1/charge", {
   method: "POST",
   headers: {
-    Authorization: "Basic " + Buffer.from("CSPay-API-xxxxxxxx:").toString("base64"),
+    Authorization: "Basic " + Buffer.from("rp_live_xxxxxxxx:").toString("base64"),
     "Content-Type": "application/json",
   },
   body: JSON.stringify({
@@ -287,7 +287,7 @@ console.log(trx.payment_url);`,
 curl_setopt_array($ch, [
   CURLOPT_POST => true,
   CURLOPT_RETURNTRANSFER => true,
-  CURLOPT_USERPWD => "CSPay-API-xxxxxxxx:",
+  CURLOPT_USERPWD => "rp_live_xxxxxxxx:",
   CURLOPT_HTTPHEADER => ["Content-Type: application/json"],
   CURLOPT_POSTFIELDS => json_encode([
     "payment_type" => "qris",
@@ -301,7 +301,7 @@ echo $trx["payment_url"];`,
 
 r = requests.post(
   "${apiBase.value}/api/v1/charge",
-  auth=("CSPay-API-xxxxxxxx", ""),
+  auth=("rp_live_xxxxxxxx", ""),
   json={
     "payment_type": "qris",
     "transaction_details": {"order_id": "ORDER-1001", "gross_amount": 25000},

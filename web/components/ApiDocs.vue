@@ -25,8 +25,8 @@
         <table>
           <thead><tr><th>Lingkungan</th><th>API Key</th><th>Base path</th></tr></thead>
           <tbody>
-            <tr><td>Production</td><td><code>CSPay-API-xxxx</code></td><td><code>/api</code></td></tr>
-            <tr><td>Sandbox</td><td><code>SB-CSPay-API-xxxx</code></td><td><code>/api/sandbox</code></td></tr>
+            <tr><td>Production</td><td><code>rp_live_xxxx</code></td><td><code>/api</code></td></tr>
+            <tr><td>Sandbox</td><td><code>SB-rp_live_xxxx</code></td><td><code>/api/sandbox</code></td></tr>
           </tbody>
         </table>
         <p class="note">API Key = satu-satunya credential (full akses) untuk memanggil API dari server kamu. Ada di menu Kredensial.</p>
@@ -134,7 +134,7 @@
 
       <section id="sandbox">
         <h2>Sandbox</h2>
-        <p>Uji integrasi tanpa uang sungguhan. Gunakan API Key sandbox (<code>SB-CSPay-API-xxxxxxxx</code>) dengan base path <code>/api/sandbox</code>. Format request dan response sama dengan production. Data terpisah, saldo tidak berubah, dan tidak ada notifikasi ke callback production. Saldo uji bisa dicek lewat <code>GET /api/sandbox/balance</code> dan tidak pernah bisa ditarik: <code>POST /api/sandbox/withdraw</code> selalu ditolak 403.</p>
+        <p>Uji integrasi tanpa uang sungguhan. Gunakan API Key sandbox (<code>SB-rp_live_xxxxxxxx</code>) dengan base path <code>/api/sandbox</code>. Format request dan response sama dengan production. Data terpisah, saldo tidak berubah, dan tidak ada notifikasi ke callback production. Saldo uji bisa dicek lewat <code>GET /api/sandbox/balance</code> dan tidak pernah bisa ditarik: <code>POST /api/sandbox/withdraw</code> selalu ditolak 403.</p>
         <table>
           <thead><tr><th>Method</th><th>Endpoint</th><th>Fungsi</th></tr></thead>
           <tbody>
@@ -185,7 +185,7 @@ onMounted(() => {
 })
 
 const B = computed(() => apiBase.value)
-const KEY = 'CSPay-API-xxxxxxxxxxxxxxxx'
+const KEY = 'rp_live_xxxxxxxxxxxxxxxx'
 
 const authTabs = computed(() => [
   { name: 'cURL', code: `curl ${B.value}/api/transaction/ORDER-1001/status \\\n  -u ${KEY}:` },
@@ -367,7 +367,7 @@ const resendRes = `{
   "notification_state": "sent"
 }`
 const sandboxTabs = computed(() => [
-  { name: 'cURL', code: `# 1. buat transaksi\ncurl -X POST ${B.value}/api/sandbox/charge \\\n  -u SB-CSPay-API-xxxx: \\\n  -H "Content-Type: application/json" \\\n  -d '{"payment_type":"qris","transaction_details":{"order_id":"TEST-1","gross_amount":10000}}'\n\n# 2. simulasi bayar\ncurl -X POST ${B.value}/api/sandbox/transaction/TEST-1/pay -u SB-CSPay-API-xxxx:\n\n# 3. cek status\ncurl ${B.value}/api/sandbox/transaction/TEST-1/status -u SB-CSPay-API-xxxx:` },
+  { name: 'cURL', code: `# 1. buat transaksi\ncurl -X POST ${B.value}/api/sandbox/charge \\\n  -u SB-rp_live_xxxx: \\\n  -H "Content-Type: application/json" \\\n  -d '{"payment_type":"qris","transaction_details":{"order_id":"TEST-1","gross_amount":10000}}'\n\n# 2. simulasi bayar\ncurl -X POST ${B.value}/api/sandbox/transaction/TEST-1/pay -u SB-rp_live_xxxx:\n\n# 3. cek status\ncurl ${B.value}/api/sandbox/transaction/TEST-1/status -u SB-rp_live_xxxx:` },
 ])
 const errRes = `{
   "status_code": "400",

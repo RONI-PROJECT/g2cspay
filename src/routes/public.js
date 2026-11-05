@@ -71,7 +71,7 @@ export function publicRoutes() {
          if (!row) {
             if (req.params.key !== 'favicon') return res.status(404).end();
             res.set({ 'Content-Type': 'image/svg+xml', 'Cache-Control': 'public, max-age=3600', 'Content-Security-Policy': "default-src 'none'; style-src 'unsafe-inline'", 'X-Content-Type-Options': 'nosniff' });
-            return res.send('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2563eb"/><stop offset="1" stop-color="#1d4ed8"/></linearGradient></defs><rect width="64" height="64" rx="16" fill="url(#g)"/><path d="M40 22a13 13 0 1 0 0 20" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round"/></svg>');
+            return res.send('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#14b8a6"/><stop offset="0.55" stop-color="#0d9488"/><stop offset="1" stop-color="#0f766e"/></linearGradient></defs><rect width="96" height="96" rx="22" fill="url(#g)"/><text x="48" y="64" font-family="Arial, sans-serif" font-weight="700" font-size="46" letter-spacing="-2" text-anchor="middle" fill="#ffffff">G2</text></svg>');
          }
          const etag = '"' + Buffer.from(row.updatedAt || '0').toString('base64') + '"';
          if (req.headers['if-none-match'] === etag) return res.status(304).end();

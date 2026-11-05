@@ -64,7 +64,7 @@ Dibangun di atas GoBiz (GoPay Merchant) milik Gojek. G2CSPAY memfasilitasi QRIS 
 | **Penarikan Dana**          | Fee persentase + flat yang dapat dikonfigurasi dari admin panel, bank picker 25+ bank Indonesia dengan logo, serta penyimpanan rekening.           |
 | **2FA TOTP**                | Two-factor authentication menggunakan Google Authenticator dengan toggle aktif/nonaktif dari profil.                                               |
 | **Panel Admin**             | Kelola user, ban/unban, transaksi, approval withdrawal, fee transaksi, minimum/fee withdrawal, branding, maintenance mode, dan override logo bank. |
-| **Sandbox**                 | API Key `SB-CSPay-API-` menggunakan tabel `transactions_sandbox` terpisah tanpa polling GoBiz dan tanpa uang asli.                                 |
+| **Sandbox**                 | API Key `SB-rp_live_` menggunakan tabel `transactions_sandbox` terpisah tanpa polling GoBiz dan tanpa uang asli.                                 |
 | **Interactive Docs**        | Dokumentasi interaktif di `/docs` dengan contoh cURL, Node.js, PHP, dan Python serta base URL otomatis dari environment.                           |
 | **Maintenance Mode**        | Halaman maintenance khusus tanpa menghentikan pembayaran QRIS maupun webhook.                                                                      |
 | **Notifikasi**              | Notifikasi in-app dan email menggunakan Resend.                                                                                                    |
@@ -77,8 +77,8 @@ Cukup **1 credential** untuk full akses: **API Key**. Konsep Client Key / Server
 
 | Lingkungan | Prefix API Key       | Base path      |
 | ---------- | -------------------- | -------------- |
-| Production | `CSPay-API-...`      | `/api/v1`      |
-| Sandbox    | `SB-CSPay-API-...`   | `/api/sandbox` |
+| Production | `rp_live_...`      | `/api/v1`      |
+| Sandbox    | `SB-rp_live_...`   | `/api/sandbox` |
 
 - Buat dan regenerate API Key dari dashboard merchant → menu **API Key**.
 - API Key dikirim sebagai HTTP Basic (API Key sebagai username, password kosong):
@@ -90,7 +90,7 @@ curl -u "$API_KEY:" "https://pay.domainmu.com/api/balance"
 atau sebagai Bearer token:
 
 ```http
-Authorization: Bearer CSPay-API-xxxxxxxxxxxxxxxx
+Authorization: Bearer rp_live_xxxxxxxxxxxxxxxxxxxx
 ```
 
 - API Key lama berawalan `CSPay-Server-` **tetap valid** (backward compatible).
@@ -105,7 +105,7 @@ Authorization: Bearer CSPay-API-xxxxxxxxxxxxxxxx
 └───────────┬───────────┘
             │
             │ POST /api/v1/charge
-            │ Authorization: Bearer <API_KEY>
+            │ Authorization: Bearer rp_live_xxxxxxxxxxxxxxxxxxxx
             ▼
 ┌───────────────────────────────┐
 │            G2CSPAY             │
@@ -183,7 +183,7 @@ PUBLIC_API_BASE_URL=https://pay.domainmu.com
 QRIS_STRING=...
 GOPAY_EMAIL=...
 GOPAY_PASSWORD=...
-API_KEY=CSPay-API-xxxxxxxx
+API_KEY=rp_live_xxxxxxxxxxxxxxxxxxxx
 WEBHOOK_SECRET=...
 ADMIN_USERNAME=...
 ADMIN_PASSWORD=...
@@ -321,7 +321,7 @@ Untuk production, jalankan polling secara berkala agar transaksi tetap dapat di-
 | **Method**         | `POST`                                   |
 | **Endpoint**       | `/api/admin/poll`                        |
 | **Interval**       | Setiap 1 menit                           |
-| **Authentication** | `Authorization: Bearer <API_KEY>`        |
+| **Authentication** | `Authorization: Bearer rp_live_xxxxxxxxxxxxxxxxxxxx`        |
 | **Tujuan**         | Menjalankan polling GoBiz secara berkala |
 
 Contoh:
@@ -353,7 +353,7 @@ Namun, cron tetap disarankan karena menjamin proses matching tetap berjalan mesk
 
 ## API v1
 
-Autentikasi: API Key sebagai HTTP Basic (username) atau `Authorization: Bearer <API_KEY>`. Cukup 1 credential (Client Key sudah dihapus). Format gaya Midtrans Core API; detail lengkap di `/docs`.
+Autentikasi: API Key sebagai HTTP Basic (username) atau `Authorization: Bearer rp_live_xxxxxxxxxxxxxxxxxxxx`. Cukup 1 credential (Client Key sudah dihapus). Format gaya Midtrans Core API; detail lengkap di `/docs`.
 
 | Method | Endpoint                                              | Fungsi                    |
 | ------ | ----------------------------------------------------- | ------------------------- |
@@ -487,7 +487,7 @@ if (
 
 ## Sandbox
 
-API Key sandbox berawalan `SB-CSPay-API-`, production `CSPay-API-` — cukup 1 credential (Client Key sudah dihapus). Key lama berawalan `CSPay-Server-` tetap valid. Base path sandbox: `/api/sandbox`.
+API Key sandbox berawalan `SB-rp_live_`, production `rp_live_` — cukup 1 credential (Client Key sudah dihapus). Key lama berawalan `CSPay-Server-` tetap valid. Base path sandbox: `/api/sandbox`.
 
 | Method | Endpoint                                                   |
 | ------ | ---------------------------------------------------------- |
@@ -509,7 +509,7 @@ Gunakan environment variables berikut:
 
 ```env
 G2CSPAY_URL=https://pay.domainmu.com
-G2CSPAY_API_KEY=CSPay-API-xxxxxxxx
+G2CSPAY_API_KEY=rp_live_xxxxxxxxxxxxxxxxxxxx
 ```
 
 ### PHP
@@ -671,7 +671,7 @@ QRIS_STRING=...
 GOPAY_EMAIL=...
 GOPAY_PASSWORD=...
 
-API_KEY=CSPay-API-xxxxxxxx
+API_KEY=rp_live_xxxxxxxxxxxxxxxxxxxx
 WEBHOOK_SECRET=...
 
 ADMIN_USERNAME=admin

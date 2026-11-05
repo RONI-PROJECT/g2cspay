@@ -6,7 +6,7 @@ import { createNotification, listNotifications, unreadCount, markAllRead, clearA
 
 /* 1 CREDENTIAL: API Key (full akses). Client Key dihapus.
    Kolom `key` = API Key; kolom lama `secret` (Client Key) tidak dipakai lagi. */
-const newApiKey = (sandbox) => (sandbox ? 'SB-CSPay-API-' : 'CSPay-API-') + crypto.randomBytes(24).toString('base64url');
+const newApiKey = (sandbox) => (sandbox ? 'SB-rp_live_' : 'rp_live_') + crypto.randomBytes(15).toString('base64url');
 
 export function userExtraRoutes() {
    const router = Router();

@@ -15,7 +15,7 @@
           <select v-if="sbKeys.length" v-model="key">
             <option v-for="k in sbKeys" :key="k.id" :value="k.key">{{ k.name || 'Sandbox' }} - {{ mask(k.key) }}</option>
           </select>
-          <input v-else v-model="key" placeholder="SB-CSPay-API-xxxxxxxx" autocomplete="off">
+          <input v-else v-model="key" placeholder="SB-rp_live_xxxxxxxx" autocomplete="off">
           <p v-if="loaded && !sbKeys.length" class="hint">Belum ada key sandbox. Buat di menu <NuxtLink to="/merchant/api-key">Kredensial</NuxtLink> dengan environment sandbox.</p>
         </div>
         <div class="f"><label>Order ID</label><input v-model="orderId" placeholder="otomatis"></div>

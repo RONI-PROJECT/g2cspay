@@ -1,5 +1,5 @@
 /**
- * Sandbox API gaya Midtrans. Auth: API Key sandbox (SB-CSPay-API-...).
+ * Sandbox API gaya Midtrans. Auth: API Key sandbox (SB-rp_live_...).
  * Data di transactions_sandbox, terpisah dari produksi. Tidak ada uang berpindah.
  *
  *   POST /api/sandbox/charge
@@ -97,7 +97,7 @@ export function sandboxRoutes() {
              FROM api_keys k JOIN users u ON u.id = k."userId"
              WHERE k.key = $1 AND k.status = 'active'`, [key]);
          if (!row) return apiError(res, 401, 'API Key tidak valid');
-         if (row.environment !== 'sandbox') return apiError(res, 403, 'Gunakan API Key sandbox (SB-CSPay-API-...)');
+         if (row.environment !== 'sandbox') return apiError(res, 403, 'Gunakan API Key sandbox (SB-rp_live_...)');
          if (row.userStatus !== 'active') return apiError(res, 403, 'Akun disuspend');
          req.user = { id: row.userId };
          next();

@@ -6,7 +6,7 @@
 
 // API G2CSPAY
 define('G2CSPAY_BASE_URL', 'https://g2cspay.example.com');
-define('G2CSPAY_API_KEY', 'CSPay-API-xxxxxxxxxxxxxxxx');   // 1 credential — Dashboard > Kredensial
+define('G2CSPAY_API_KEY', 'rp_live_xxxxxxxxxxxxxxxx');   // 1 credential — Dashboard > Kredensial
 define('G2CSPAY_WEBHOOK_SECRET', 'whsec_xxxxxxxxxx');
 
 // Database MySQL
