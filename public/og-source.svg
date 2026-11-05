@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#0d9488" stop-opacity="0.5"/><stop offset="1" stop-color="#0d9488" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="gr" width="42" height="42" patternUnits="userSpaceOnUse">
+      <path d="M 42 0 H 0 V 42" fill="none" stroke="rgba(255,255,255,0.035)" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="630" fill="#0a1122"/>
+  <rect width="1200" height="630" fill="url(#gr)"/>
+  <circle cx="980" cy="110" r="520" fill="url(#glow)" opacity="0.55"/>
+  <circle cx="110" cy="640" r="430" fill="url(#glow)" opacity="0.35"/>
+
+  <!-- dekorasi QR finder di sudut -->
+  <g transform="translate(1035,-52)" opacity="0.09">
+    <rect width="150" height="150" rx="26" fill="none" stroke="#ffffff" stroke-width="16"/>
+    <rect x="42" y="42" width="66" height="66" rx="12" fill="#ffffff"/>
+  </g>
+  <g transform="translate(-58,508)" opacity="0.08">
+    <rect width="150" height="150" rx="26" fill="none" stroke="#ffffff" stroke-width="16"/>
+    <rect x="42" y="42" width="66" height="66" rx="12" fill="#ffffff"/>
+  </g>
+
+  <!-- kiri: brand -->
+  <g transform="translate(88,132)">
+  <defs>
+    <linearGradient id="gm" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2dd4bf"/><stop offset="0.55" stop-color="#0d9488"/><stop offset="1" stop-color="#0f766e"/>
+    </linearGradient>
+    <linearGradient id="gl" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.22"/><stop offset="0.55" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="116" height="116" rx="26.6" fill="url(#gm)"/>
+  <rect width="116" height="116" rx="26.6" fill="url(#gl)"/>
+  <rect x="77.3" y="14.5" width="24.2" height="24.2" rx="6.0" fill="none" stroke="#ffffff" stroke-opacity="0.55" stroke-width="6.04"/>
+  <rect x="85.2" y="22.4" width="8.5" height="8.5" rx="1.9" fill="#ffffff" fill-opacity="0.55"/>
+  <text x="52.0" y="81.0" font-family="Poppins, 'Noto Sans', 'DejaVu Sans', sans-serif" font-weight="700" font-size="55.6" letter-spacing="-2.4" text-anchor="middle" fill="#ffffff">G2</text>
+  </g>
+  <text x="232" y="228" font-family="Poppins" font-weight="700" font-size="92" letter-spacing="-2">
+    <tspan fill="#ffffff">G2</tspan><tspan fill="#5eead4">CSPAY</tspan>
+  </text>
+  <text x="90" y="306" font-family="Poppins Medium" font-size="34" fill="#94a3b8">Payment Gateway QRIS</text>
+  <text x="90" y="350" font-family="Poppins Medium" font-size="34" fill="#94a3b8">untuk Merchant Indonesia</text>
+  <rect x="90" y="392" width="194" height="46" rx="23" fill="rgba(13,148,136,0.18)" stroke="rgba(94,234,212,0.32)" stroke-width="1.4"/><text x="116" y="422" font-family="Poppins SemiBold" font-size="21" fill="#99f6e4">QRIS Dinamis</text><rect x="297.9375" y="392" width="226" height="46" rx="23" fill="rgba(13,148,136,0.18)" stroke="rgba(94,234,212,0.32)" stroke-width="1.4"/><text x="323.9375" y="422" font-family="Poppins SemiBold" font-size="21" fill="#99f6e4">Webhook Instan</text><rect x="537.953125" y="392" width="279" height="46" rx="23" fill="rgba(13,148,136,0.18)" stroke="rgba(94,234,212,0.32)" stroke-width="1.4"/><text x="563.953125" y="422" font-family="Poppins SemiBold" font-size="21" fill="#99f6e4">Dashboard Merchant</text>
+  <circle cx="98" cy="556" r="6" fill="#0d9488"/>
+  <text x="116" y="565" font-family="Poppins SemiBold" font-size="26" fill="#2dd4bf">Self-Hosted Payment Gateway</text>
+
+  <!-- kanan: kartu QR (QR asli, scannable) -->
+  <g transform="rotate(-5 966.0 314.0)">
+    <rect x="826" y="158" width="300" height="348" rx="24" fill="#000000" opacity="0.38"/>
+    <rect x="816" y="140" width="300" height="348" rx="24" fill="#ffffff"/>
+    <image x="848" y="166" width="236" height="236" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPoAAAD6CAIAAAAHjs1qAAAD+klEQVR4nO3dwZHUOhRA0T+/CIAlOZB/KOTAkgxMBi4ozUOy7znbqWnb3be0eSX547qu/6Dh/903AP+O3AmROyFyJ0TuhMidELkTIndC5E6I3AmROyFyJ0TuhMidELkTIndC5E6I3AmROyFfVv7567fvn3Ufh/j188fNX8983ife84r7571ndSdE7oTInRC5EyJ3QuROiNwJkTshcidkaap6b2X6NeeJU8a5b7L2G1ndCZE7IXInRO6EyJ0QuRMid0LkTojcCRmcqt6bm5ydOSk8867uve83sroTIndC5E6I3AmROyFyJ0TuhMidELkTsm2q+kQrs8D3TSifyOpOiNwJkTshcidE7oTInRC5EyJ3QuROiKnqX1iZjNbefnomqzshcidE7oTInRC5EyJ3QuROiNwJkTsh26aqT9xhOTcZPfPbOPOuVljdCZE7IXInRO6EyJ0QuRMid0LkTojcCRmcqr5v/+X9E63MXOf+9977fqN7VndC5E6I3AmROyFyJ0TuhMidELkTIndCPq7r2n0PLzE3++SzWN0JkTshcidE7oTInRC5EyJ3QuROiNwJWdqrag/lZ3niTtZdb4pdeSKrOyFyJ0TuhMidELkTIndC5E6I3AmROyFLU9UnztVW7Jr1zl135ZOf+B5ZqzshcidE7oTInRC5EyJ3QuROiNwJkTshg3tVd6nd1dyEctfUfG73rdWdELkTIndC5E6I3AmROyFyJ0TuhMidkMH3qp55PvCuE3FXnDknnpu5zn2TVndC5E6I3AmROyFyJ0TuhMidELkTIndClvaqnmnXtO/Mt5DusuuM33tWd0LkTojcCZE7IXInRO6EyJ0QuRMid0IG96q+z9zc9H1vqLVXFTaTOyFyJ0TuhMidELkTIndC5E6I3AlZmqrWdljuet4z930+8duwuhMid0LkTojcCZE7IXInRO6EyJ0QuRMyeAJwbRY4t1d1xdx1vVcVjiZ3QuROiNwJkTshcidE7oTInRC5E7LtvapPPNX23q69m3PXPXMia68q/BG5EyJ3QuROiNwJkTshcidE7oTInZBtU9X3mdu7eeZJy7tmrius7oTInRC5EyJ3QuROiNwJkTshcidE7oSYqv6FuR2WZ55LvPLJ93Zd1+pOiNwJkTshcidE7oTInRC5EyJ3QuROyLap6plvXZ1z5onHKzNXe1XhaHInRO6EyJ0QuRMid0LkTojcCZE7IYNT1TPPrV0xN0dcue6uPbJPnItb3QmROyFyJ0TuhMidELkTIndC5E6I3An5uK5r9z3AP2J1J0TuhMidELkTIndC5E6I3AmROyFyJ0TuhMidELkTIndC5E6I3AmROyFyJ0TuhMidkN820e6s53WJwwAAAABJRU5ErkJggg=="/>
+    <text x="966.0" y="438" text-anchor="middle" font-family="Poppins SemiBold" font-size="19" letter-spacing="3" fill="#64748b">SCAN UNTUK BAYAR</text>
+    <text x="966.0" y="470" text-anchor="middle" font-family="Poppins" font-weight="700" font-size="27" fill="#0f172a">Rp 25.000</text>
+  </g>
+</svg>
