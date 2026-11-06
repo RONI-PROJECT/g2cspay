@@ -17,9 +17,9 @@ export default defineNuxtPlugin(() => {
       const { settings, load, loaded } = useSiteSettings()
       if (!loaded.value) await load(true)
       // Cuma timpa favicon G2 bawaan kalau ada upload custom di panel.
-      const custom = settings.value.favicon_url
+      const custom = settings.value.favicon_url || settings.value.logo_url
       if (custom) setFavicon(custom)
-      watch(() => settings.value.favicon_url, (v) => { if (v) setFavicon(v) })
+      watch(() => settings.value.favicon_url || settings.value.logo_url, (v) => { if (v) setFavicon(v) })
     } catch {}
   })
 })

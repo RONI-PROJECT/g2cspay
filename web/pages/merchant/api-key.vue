@@ -340,7 +340,7 @@ h1 { font-size: 13px; font-weight: 700; color: var(--txt); letter-spacing: -0.02
 .modal-enter-from .modal, .modal-leave-to .modal { transform: scale(0.96) translateY(8px); opacity: 0; }
 
 /* ===== TOAST ===== */
-.toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); display: inline-flex; align-items: center; gap: 10px; padding: 13px 20px; background: var(--txt); border-radius: 8px; color: #ffffff; font-size: 13px; font-weight: 700; font-family: 'Inter', sans-serif; box-shadow: 0 1px 2px rgba(var(--shadow-rgb),.06); z-index: 10000; max-width: calc(100% - 40px); }
+.toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); display: inline-flex; align-items: center; gap: 10px; padding: 13px 20px; background: var(--grad); border-radius: 8px; color: #ffffff; font-size: 13px; font-weight: 700; font-family: 'Inter', sans-serif; box-shadow: 0 1px 2px rgba(var(--shadow-rgb),.06); z-index: 10000; max-width: calc(100% - 40px); }
 .toast svg { width: 16px; height: 16px; flex-shrink: 0; }
 .toast-success svg { color: #34d399; }
 .toast-error svg { color: #fb7185; }
@@ -367,7 +367,7 @@ h1 { font-size: 13px; font-weight: 700; color: var(--txt); letter-spacing: -0.02
 .env-tabs { display: flex; gap: 6px; margin-bottom: 14px; overflow-x: auto; scrollbar-width: none; }
 .env-tabs button { display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px; border: 1px solid var(--line); border-radius: 999px; background: var(--card); font-size: 13px; font-weight: 600; color: var(--dim); white-space: nowrap; font-family: inherit; cursor: pointer; }
 .env-tabs button span { font-size: 11px; padding: 1px 7px; border-radius: 999px; background: var(--bg-soft, var(--soft)); }
-.env-tabs button.on { background: var(--txt); border-color: var(--txt); color: #fff; }
+.env-tabs button.on { background: var(--grad); border-color: var(--vio); color: #fff; }
 .env-tabs button.on span { background: rgba(255,255,255,.18); color: #fff; }
 .env-note { margin: 0 0 14px; padding: 10px 14px; border-radius: 8px; font-size: 12.5px; line-height: 1.6; overflow-wrap: anywhere; }
 .env-note.sbx { background: rgba(13,148,136,.08); color: #5eead4; border: 1px solid rgba(13,148,136,.22); }

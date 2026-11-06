@@ -82,12 +82,12 @@ async function copy() {
 
 <style scoped>
 /* Blok kode gelap — biru tua */
-.code { position: relative; background: #08102a; margin: 14px 0 22px; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); box-shadow: 0 1px 2px rgba(var(--shadow-rgb),.05), 0 10px 28px rgba(var(--shadow-rgb),.07); max-width: 100%; }
+.code { position: relative; background: var(--card); margin: 14px 0 22px; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); box-shadow: 0 1px 2px rgba(var(--shadow-rgb),.05), 0 10px 28px rgba(var(--shadow-rgb),.07); max-width: 100%; }
 .code.has-st { border-left: 4px solid var(--line-2); }
 .code.has-st.s2 { border-left-color: #059669; }
 .code.has-st.s4 { border-left-color: #d97706; }
 .code.has-st.s5 { border-left-color: #e11d48; }
-.bar { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; padding: 10px 12px; background: var(--bg-soft); border-bottom: 1px solid var(--line); }
+.bar { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; padding: 10px 12px; background: var(--card); border-bottom: 1px solid var(--line); }
 .dots { display: inline-flex; gap: 6px; margin-right: 8px; }
 .dots i { width: 9px; height: 9px; border-radius: 50%; background: #f87171; }
 .dots i:nth-child(2) { background: #fbbf24; } .dots i:nth-child(3) { background: #34d399; }

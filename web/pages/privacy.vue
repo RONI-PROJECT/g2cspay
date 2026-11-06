@@ -136,7 +136,7 @@ useHead({ title: 'Kebijakan Privasi - ' + (siteName.value || 'G2CSPAY') })
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(255,255,255,0.85);
+  background: rgba(7,13,34,0.85);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--line);

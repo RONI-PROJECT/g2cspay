@@ -20,7 +20,7 @@ const initials = computed(() => String(name.value).split(/\s+/).map((w: string) 
 <style scoped>
 .pc { display: flex; align-items: center; gap: 9px; padding: 4px 10px 4px 4px; border: 1px solid var(--line); border-radius: 999px; background: var(--card); transition: border-color .15s; max-width: 220px; }
 a.pc:hover { border-color: var(--line-2); color: inherit; }
-.pc-av { width: 28px; height: 28px; border-radius: 50%; background: var(--txt); color: #fff; font-size: 11px; font-weight: 600; display: grid; place-items: center; flex-shrink: 0; }
+.pc-av { width: 28px; height: 28px; border-radius: 50%; background: var(--grad); color: #fff; font-size: 11px; font-weight: 600; display: grid; place-items: center; flex-shrink: 0; }
 .pc-tx { display: flex; flex-direction: column; min-width: 0; line-height: 1.25; }
 .pc-tx b { font-size: 12.5px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .pc-tx small { font-size: 11px; color: var(--dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

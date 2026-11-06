@@ -200,7 +200,7 @@ h1 { font-size: 13px; font-weight: 700; color: var(--txt); letter-spacing: -0.02
   position: fixed; bottom: 24px; left: 50%;
   transform: translateX(-50%);
   padding: 12px 20px;
-  background: var(--txt); color: #ffffff;
+  background: var(--grad); color: #ffffff;
   border-radius: 8px; font-size: 13px; font-weight: 700;
   box-shadow: 0 1px 2px rgba(var(--shadow-rgb),.06);
   z-index: 850; display: flex; align-items: center; gap: 8px;

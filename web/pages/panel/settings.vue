@@ -897,7 +897,7 @@ h1 { font-size: 13px; font-weight: 700; color: var(--txt); letter-spacing: -0.02
   left: 50%;
   transform: translateX(-50%);
   padding: 12px 20px;
-  background: var(--txt);
+  background: var(--grad);
   color: #ffffff;
   border-radius: 8px;
   font-size: 13px;

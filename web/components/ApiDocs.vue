@@ -11,7 +11,7 @@
         <h1>API {{ siteName }}</h1>
         <p>REST API untuk menerima pembayaran QRIS. Request dan response berformat JSON, UTF-8. Semua nominal berupa string dengan dua desimal, mata uang IDR.</p>
         <dl class="kv">
-          <dt>Base URL</dt><dd><code>{{ apiBase }}</code></dd>
+          <dt>Base URL</dt><dd class="cp-row"><code>{{ apiBase }}</code><button type="button" class="copy-base" @click="copyBase">{{ baseCopied ? 'Tersalin' : 'Salin' }}</button></dd>
           <dt>Content-Type</dt><dd><code>application/json</code></dd>
           <dt>Zona waktu</dt><dd>WIB (UTC+7), format <code>YYYY-MM-DD HH:mm:ss</code></dd>
           <dt>Contoh</dt><dd><code>POST {{ apiBase }}/api/v2/charge</code></dd>
@@ -189,6 +189,19 @@ onMounted(() => {
 })
 
 const B = computed(() => apiBase.value)
+const baseCopied = ref(false)
+async function copyBase() {
+  const text = apiBase.value
+  let done = false
+  try { await navigator.clipboard.writeText(text); done = true } catch {
+    const ta = document.createElement('textarea')
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0'
+    document.body.appendChild(ta); ta.select()
+    try { done = document.execCommand('copy') } catch {}
+    document.body.removeChild(ta)
+  }
+  if (done) { baseCopied.value = true; setTimeout(() => (baseCopied.value = false), 1400) }
+}
 const KEY = 'rp_live_xxxxxxxxxxxxxxxx'
 
 const authTabs = computed(() => [
@@ -441,6 +454,9 @@ tbody tr:last-child td:last-child { border-bottom-right-radius: 10px; }
 tbody tr { transition: background 0.15s; }
 tbody tr:hover { background: rgba(var(--vio-rgb),.03); }
 
+.cp-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.copy-base { padding: 3px 12px; font-size: 11.5px; font-weight: 700; color: var(--vio-ink); border: 1px solid rgba(var(--vio-rgb),.3); background: rgba(var(--vio-rgb),.08); border-radius: 8px; }
+.copy-base:hover { background: var(--vio); border-color: var(--vio); color: #fff; }
 .intro { text-align: center; }
 .intro p { margin-left: auto; margin-right: auto; }
 .intro .kv { text-align: left; max-width: 520px; margin-left: auto; margin-right: auto; }

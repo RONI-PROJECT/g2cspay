@@ -436,15 +436,15 @@ em { font-style: normal; background: var(--grad); -webkit-background-clip: text;
 /* API */
 .api { padding: 88px 0; background: var(--card); }
 .api-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; margin-bottom: 28px; }
-.api-shell { border-radius: 18px; overflow: hidden; background: #060b1d; border: 1px solid var(--line); box-shadow: 0 30px 70px -24px rgba(var(--shadow-rgb),.5); }
-.api-tabs { display: flex; align-items: center; gap: 4px; padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,.08); overflow-x: auto; scrollbar-width: none; }
+.api-shell { border-radius: 18px; overflow: hidden; background: var(--card); border: 1px solid var(--line); box-shadow: 0 30px 70px -24px rgba(var(--shadow-rgb),.5); }
+.api-tabs { display: flex; align-items: center; gap: 4px; padding: 10px 12px; border-bottom: 1px solid var(--line); overflow-x: auto; scrollbar-width: none; }
 .api-tabs::-webkit-scrollbar { display: none; }
 .api-tab { flex: none; }
 .api-tab { padding: 7px 14px; font-size: 12.5px; font-weight: 700; color: #94a3b8; border-radius: 8px; transition: all .15s; }
 .api-tab:hover { color: #fff; }
-.api-tab.active { background: rgba(45,212,191,.16); color: #fff; }
-.api-copy { flex: none; position: sticky; right: 0; background: #060b1d; margin-left: auto; padding: 7px 14px; font-size: 12px; font-weight: 700; color: #99f6e4; border: 1px solid rgba(45,212,191,.25); border-radius: 8px; }
-.api-copy:hover { background: rgba(45,212,191,.12); }
+.api-tab.active { background: rgba(var(--vio-rgb),.28); color: #fff; }
+.api-copy { flex: none; position: sticky; right: 0; background: var(--card); margin-left: auto; padding: 7px 14px; font-size: 12px; font-weight: 700; color: var(--vio-ink); border: 1px solid rgba(var(--vio-rgb),.3); border-radius: 8px; }
+.api-copy:hover { background: rgba(var(--vio-rgb),.16); }
 .api-code { padding: 22px 24px; white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; line-height: 1.7; color: #e2e8f0; }
 .api-grid { margin-top: 18px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
 .api-item { padding: 18px 20px; border: 1px solid var(--line); border-radius: 14px; background: var(--card); transition: border-color .2s, transform .2s; }

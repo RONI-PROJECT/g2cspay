@@ -305,7 +305,9 @@ async function doLogout() {
   display: flex; align-items: center; gap: 14px;
   padding: 0 20px;
   border-bottom: 1px solid var(--line);
-  background: rgba(255,255,255,0.8);
+  background: rgba(7,13,34,0.86);
+  -webkit-backdrop-filter: saturate(160%) blur(10px);
+  backdrop-filter: saturate(160%) blur(10px);
   position: sticky; top: 0;
   z-index: 30;
 }

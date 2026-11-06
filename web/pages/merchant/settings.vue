@@ -475,7 +475,8 @@ h1 { font-size: 13px; font-weight: 700; letter-spacing: -0.02em; color: var(--tx
 /* ===== PROFILE CARD ===== */
 .profile-card {
   padding: 26px;
-  background: none;
+  background: var(--card);
+  box-shadow: var(--shadow-sm);
   border: 1px solid rgba(var(--vio-rgb),0.22);
   border-radius: 8px;
   margin-bottom: 16px;
@@ -863,7 +864,7 @@ h1 { font-size: 13px; font-weight: 700; letter-spacing: -0.02em; color: var(--tx
   align-items: center;
   gap: 10px;
   padding: 13px 20px;
-  background: var(--txt);
+  background: var(--grad);
   border-radius: 8px;
   color: #ffffff;
   font-size: 13px;
@@ -905,6 +906,6 @@ h1 { font-size: 13px; font-weight: 700; letter-spacing: -0.02em; color: var(--tx
 .store-form { display: flex; gap: 8px; flex: 1; min-width: 220px; justify-content: flex-end; }
 .store-form input { flex: 1; min-width: 0; max-width: 280px; height: 36px; padding: 0 12px; border: 1px solid var(--line-2); border-radius: 8px; font-size: 13.5px; background: var(--card); color: inherit; }
 .store-form input:focus { outline: none; border-color: var(--vio); box-shadow: 0 0 0 3px rgba(var(--vio-rgb),.12); }
-.store-form button { height: 36px; padding: 0 16px; border-radius: 8px; background: var(--txt); color: #fff; font-size: 13px; font-weight: 600; }
+.store-form button { height: 36px; padding: 0 16px; border-radius: 8px; background: var(--grad); color: #fff; font-size: 13px; font-weight: 600; }
 .store-form button:disabled { opacity: .4; cursor: not-allowed; }
 </style>
