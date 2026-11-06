@@ -134,7 +134,7 @@ async function renderTurnstile() {
     if (widgetId) { try { t.remove(widgetId) } catch {} widgetId = null }
     widgetId = t.render(turnstileEl.value, {
       sitekey: turnstileKey.value,
-      theme: 'light',
+      theme: 'dark',
       callback: (tok: string) => { turnstileToken.value = tok; turnstileError.value = false },
       'error-callback': () => { turnstileToken.value = ''; turnstileError.value = true },
       'expired-callback': () => { turnstileToken.value = '' },
@@ -383,8 +383,8 @@ async function submit() {
     animation: none !important;
   }
 }
-.ts-wrap { display: flex; flex-direction: column; align-items: center; gap: 6px; }
-.ts-el { min-height: 65px; max-width: 100%; display: flex; justify-content: center; }
+.ts-wrap { display: flex; flex-direction: column; align-items: center; gap: 6px; margin: 4px 0; }
+.ts-el { min-height: 65px; max-width: 100%; display: flex; justify-content: center; color-scheme: dark; }
 .ts-hint { font-size: 12px; color: #e11d48; text-align: center; }
 .ts-hint button { color: var(--vio); font-weight: 600; text-decoration: underline; }
 </style>

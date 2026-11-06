@@ -31,5 +31,8 @@ watch(logoUrl, () => { failed.value = false })
 
 <style scoped>
 .logo-ph { display: block; width: 120px; height: var(--logo-h, 30px); }
+.logo-ph { display: block; width: 120px; height: var(--logo-h, 30px); }
+.logo-ph { display: block; width: 120px; height: var(--logo-h, 30px); }
+.logo-ph { display: block; width: 120px; height: var(--logo-h, 30px); }
 img { height: var(--logo-h, 30px); width: auto; display: block; image-rendering: auto; }
 </style>
