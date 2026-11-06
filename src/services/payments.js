@@ -57,10 +57,34 @@ export function toPublic(trx, baseUrl = '') {
    };
 }
 
+/*
+ * Nominal unik: biar notif mutasi (SMS/notif-forwarder) cuma bisa match SATU transaksi.
+ * Kalau sudah ada trx PENDING dengan payAmount sama, nominal bayar digeser +1..+999.
+ * Yang dikredit ke merchant tetap `amount` (gross), geserannya cuma di QR yang discan.
+ */
+async function uniquePayAmount(amount) {
+   try {
+      const pendings = await transactions.listPending();
+      const used = new Set(pendings.map((t) => Number(t.payAmount)));
+      if (!used.has(amount)) return amount;
+      const deltas = Array.from({ length: 999 }, (_, i) => i + 1);
+      const seed = Date.now();
+      for (let i = deltas.length - 1; i > 0; i--) {
+         const j = (i * 7 + seed + i * 13) % (i + 1);
+         [deltas[i], deltas[j]] = [deltas[j], deltas[i]];
+      }
+      for (const d of deltas) {
+         const cand = amount + d;
+         if (cand <= config.maxAmount && !used.has(cand)) return cand;
+      }
+   } catch (e) { logTrx.warn('uniquePayAmount gagal (pakai nominal asli): ' + e.message); }
+   return amount;
+}
+
 export async function create({ amount, fee = 0, trxId, callbackUrl = null, callbackSecret = null, expireMinutes, metadata = null, idempotencyKey = null, userId = null }) {
    const net = Math.max(0, amount - fee);
    const minutes = expireMinutes ?? config.expireMinutes;
-   const payAmount = amount;
+   const payAmount = config.uniqueAmount ? await uniquePayAmount(amount) : amount;
 
    const trx = {
       trxId: trxId || generateTrxId(),
@@ -77,7 +101,8 @@ export async function create({ amount, fee = 0, trxId, callbackUrl = null, callb
 
    try {
       await transactions.insert(trx);
-      logTrx.info('CREATE ' + trx.trxId + ' userId=' + userId + ' amount=' + amount + ' fee=' + fee + ' amountToPay=' + payAmount);
+      const bump = payAmount - amount;
+      logTrx.info('CREATE ' + trx.trxId + ' userId=' + userId + ' amount=' + amount + ' fee=' + fee + ' amountToPay=' + payAmount + (bump > 0 ? ' (unik +' + bump + ')' : ''));
       return trx;
    } catch (e) {
       if (!isUniqueViolation(e)) throw e;
@@ -103,7 +128,7 @@ export async function cancel(trx) {
    return true;
 }
 
-async function markPaid(trx, entry) {
+export async function markPaid(trx, entry) {
    if (trx.status !== 'PENDING') return false;
    const paid = { ...trx, status: 'PAID', paidAt: new Date().toISOString(), entry };
    if (!(await transactions.settle(paid))) { logTrx.warn(trx.trxId + ' already settled, skipping'); return false; }

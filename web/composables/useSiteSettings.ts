@@ -49,7 +49,7 @@ const defaultSettings: SiteSettings = {
   wd_fee_percent: 2.5,
   wd_fee_flat: 4500,
   fee_transaction_percent: 1.8,
-  theme_color: 'navy',
+  theme_color: 'teal',
   logo_height: 30,
   bank_logo_shape: 'rounded',
   bank_logo_gray: false,
@@ -128,7 +128,7 @@ export function useSiteSettings() {
   const feeTransactionPercent = computed(() => settings.value.fee_transaction_percent)
   const bankLogos = computed(() => settings.value.bank_logos || {})
   const marqueeBanks = computed(() => settings.value.marquee_banks)
-  const themeColor = computed(() => settings.value.theme_color || 'navy')
+  const themeColor = computed(() => settings.value.theme_color || 'teal')
   const maintenance = computed(() => settings.value.maintenance_mode === 'true')
 
   return {

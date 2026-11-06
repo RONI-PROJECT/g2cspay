@@ -25,6 +25,8 @@ export const config = Object.freeze({
    timeZone: str('TZ_NAME', 'Asia/Jakarta'),
    apiKey: str('API_KEY'),
    apiKeyPrefix: 'csp_',
+   mutasiSecret: str('MUTASI_SECRET'),
+   uniqueAmount: str('UNIQUE_AMOUNT', '1') !== '0',
    webhook: Object.freeze({
       url: str('WEBHOOK_URL'),
       secret: str('WEBHOOK_SECRET', 'change-me'),
