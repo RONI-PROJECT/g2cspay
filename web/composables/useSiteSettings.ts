@@ -106,7 +106,7 @@ export function useSiteSettings() {
   const siteDescription = computed(() => settings.value.site_description)
   const siteKeywords = computed(() => settings.value.site_keywords)
   const logoUrl = computed(() => settings.value.logo_url)
-  const faviconUrl = computed(() => settings.value.favicon_url || '/api/public/asset/favicon')
+  const faviconUrl = computed(() => settings.value.favicon_url || '/apple-touch-icon.png')
   const heroTitle = computed(() => settings.value.hero_title)
   const heroLead = computed(() => settings.value.hero_lead)
   const marqueeText = computed(() => settings.value.marquee_text)
