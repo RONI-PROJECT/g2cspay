@@ -202,7 +202,6 @@ async function copyBase() {
   }
   if (done) { baseCopied.value = true; setTimeout(() => (baseCopied.value = false), 1400) }
 }
-const baseCopied = ref(false)
 async function copyBase() {
   const text = apiBase.value
   let done = false
