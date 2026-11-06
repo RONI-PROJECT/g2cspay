@@ -69,7 +69,7 @@ async function call(path, method, body) {
   localStorage.setItem('csp_sb_key', key);
   const r = await fetch(B + path, {
     method,
-    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + key },
+    headers: { 'Content-Type': 'application/json', Authorization: 'X-API-Key ' + key },
     body: body ? JSON.stringify(body) : undefined,
   });
   const ct = r.headers.get('content-type') || '';
@@ -95,7 +95,7 @@ async function charge() {
 
 async function loadQr() {
   const key = $('key').value.trim();
-  const r = await fetch(B + '/transaction/' + encodeURIComponent(current) + '/qr', { headers: { Authorization: 'Bearer ' + key } });
+  const r = await fetch(B + '/transaction/' + encodeURIComponent(current) + '/qr', { headers: { Authorization: 'X-API-Key ' + key } });
   if (!r.ok) return;
   $('qr').innerHTML = '<img alt="QR">';
   $('qr').firstChild.src = URL.createObjectURL(await r.blob());

@@ -27,11 +27,11 @@ export function securityHeaders(req, res, next) {
    next();
 }
 
-/** The key this request presented, from `X-API-Key` or `Authorization: Bearer`. */
+/** The key this request presented, from `X-API-Key` or `Authorization: X-API-Key`. */
 function presentedKey(req) {
    const headerKey = req.get('x-api-key') || '';
    const auth = req.get('authorization') || '';
-   const bearer = auth.startsWith('Bearer ') ? auth.slice(7) : '';
+   const bearer = auth.startsWith('X-API-Key ') ? auth.slice(7) : '';
    let basic = '';
    if (auth.startsWith('Basic ')) {
       try { basic = Buffer.from(auth.slice(6), 'base64').toString('utf8').split(':')[0]; } catch {}
@@ -60,7 +60,7 @@ export function isAuthenticated(req, apiKey) {
 
 /**
  * API-key guard (timing-safe). Reads the `X-API-Key` header. No-op if apiKey
- * is falsy. Also accepts `Authorization: Bearer <key>` as a fallback.
+ * is falsy. Also accepts `Authorization: X-API-Key <key>` as a fallback.
  * @param {string|null} apiKey
  */
 // Cache in-memory buat performance (5 menit TTL)

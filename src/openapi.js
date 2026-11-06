@@ -47,17 +47,17 @@ export const openApiSpec = {
    info: {
       title: 'G2CSPAY API',
       version: '1.0.0',
-      description: 'Payment gateway QRIS. Autentikasi: HTTP Basic (API Key sebagai username) atau Bearer.',
+      description: 'Payment gateway QRIS. Autentikasi: HTTP Basic (API Key sebagai username) atau X-API-Key.',
    },
    servers: SERVERS,
    components: {
       securitySchemes: {
          BasicAuth: { type: 'http', scheme: 'basic' },
-         BearerAuth: { type: 'http', scheme: 'bearer' },
+         X-API-KeyAuth: { type: 'http', scheme: 'bearer' },
       },
       schemas: { Transaction, Error: ErrorBody },
    },
-   security: [{ BasicAuth: [] }, { BearerAuth: [] }],
+   security: [{ BasicAuth: [] }, { X-API-KeyAuth: [] }],
    paths: {
       '/api/v1/charge': {
          post: {

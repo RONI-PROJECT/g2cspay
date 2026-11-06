@@ -87,7 +87,7 @@ Cukup **1 credential** untuk full akses: **API Key**. Konsep Client Key / Server
 curl -u "$API_KEY:" "https://pay.domainmu.com/api/balance"
 ```
 
-atau sebagai Bearer token:
+atau sebagai header X-API-Key:
 
 ```http
 X-API-Key: rp_live_xxxxxxxxxxxxxxxxxxxx
@@ -328,7 +328,7 @@ Contoh:
 
 ```bash
 curl -X POST "https://pay.domainmu.com/api/admin/poll" \
-  -H "Authorization: Bearer ${API_KEY}"
+  -H "X-API-Key: rp_live_xxxxxxxxxxxxxxxxxxxx"
 ```
 
 ### Crontab VPS
@@ -342,7 +342,7 @@ crontab -e
 Tambahkan:
 
 ```cron
-* * * * * curl -s -X POST "https://pay.domainmu.com/api/admin/poll" -H "Authorization: Bearer $API_KEY" >/dev/null 2>&1
+* * * * * curl -s -X POST "https://pay.domainmu.com/api/admin/poll" -H "X-API-Key: rp_live_xxxxxxxxxxxxxxxxxxxx" >/dev/null 2>&1
 ```
 
 Tanpa cron, pembayaran tetap dapat terdeteksi ketika customer membuka halaman bayar karena menggunakan **request-driven polling**.
@@ -718,7 +718,7 @@ G2CSPAY/
 ├── src/
 │   ├── app.js                 # Express + route mounting
 │   ├── config.js              # Env config
-│   ├── security.js            # Bearer auth, rate limit, HMAC, SSRF guard
+│   ├── security.js            # X-API-Key auth, rate limit, HMAC, SSRF guard
 │   │
 │   ├── routes/
 │   │   ├── payments.js        # API v1 — /api/v1/charge

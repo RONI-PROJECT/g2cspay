@@ -1,6 +1,6 @@
 /**
  * Endpoint untuk cron job / uptime pinger (cron-job.org, UptimeRobot, crontab curl).
- *   GET|POST /api/cron/poll?key=CRON_SECRET     (atau header Authorization: Bearer <secret> / X-Cron-Key)
+ *   GET|POST /api/cron/poll?key=CRON_SECRET     (atau header Authorization: X-API-Key <secret> / X-Cron-Key)
  * Menjalankan 1 siklus penuh: cek mutasi GoBiz, cocokkan pembayaran, expire, kirim webhook tertunda.
  * Set CRON_SECRET di .env. Jadwal disarankan tiap 10-30 detik.
  */
@@ -20,7 +20,7 @@ export function cronRoutes(merchant) {
    const handler = async (req, res) => {
       const secret = process.env.CRON_SECRET;
       if (!secret) return res.status(503).json({ success: false, error: 'CRON_SECRET belum diset di .env' });
-      const bearer = (req.get('authorization') || '').replace(/^Bearer\s+/i, '');
+      const bearer = (req.get('authorization') || '').replace(/^X-API-Key\s+/i, '');
       const given = req.query.key || req.get('x-cron-key') || bearer;
       if (!given || !eq(given, secret)) return res.status(401).json({ success: false, error: 'Key salah' });
       if (running) return res.json({ success: true, skipped: 'siklus sebelumnya masih jalan' });

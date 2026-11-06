@@ -87,7 +87,7 @@ export function sandboxRoutes() {
          await ensureSchema();
          const auth = req.get('authorization') || '';
          let key = req.get('x-api-key') || '';
-         if (!key && auth.startsWith('Bearer ')) key = auth.slice(7);
+         if (!key && auth.startsWith('X-API-Key ')) key = auth.slice(7);
          if (!key && auth.startsWith('Basic ')) {
             try { key = Buffer.from(auth.slice(6), 'base64').toString('utf8').split(':')[0]; } catch {}
          }
@@ -202,7 +202,7 @@ export function sandboxRoutes() {
       if (t.status === 'PENDING') return apiError(res, 412, 'Transaksi masih pending, tidak ada notifikasi untuk dikirim');
       const st = statusOf(t);
       const oid = t.orderId || t.trxId;
-      const key = (req.get('x-api-key') || (req.get('authorization') || '').replace(/^Bearer /, '')).trim();
+      const key = (req.get('x-api-key') || (req.get('authorization') || '').replace(/^X-API-Key /, '')).trim();
       res.json({
          status_code: '200',
          status_message: 'Notifikasi sandbox dibentuk ulang',
