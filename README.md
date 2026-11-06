@@ -90,7 +90,7 @@ curl -u "$API_KEY:" "https://pay.domainmu.com/api/balance"
 atau sebagai Bearer token:
 
 ```http
-Authorization: Bearer rp_live_xxxxxxxxxxxxxxxxxxxx
+X-API-Key: rp_live_xxxxxxxxxxxxxxxxxxxx
 ```
 
 - API Key lama berawalan `CSPay-Server-` **tetap valid** (backward compatible).
@@ -105,7 +105,7 @@ Authorization: Bearer rp_live_xxxxxxxxxxxxxxxxxxxx
 └───────────┬───────────┘
             │
             │ POST /api/v1/charge
-            │ Authorization: Bearer rp_live_xxxxxxxxxxxxxxxxxxxx
+            │ X-API-Key: rp_live_xxxxxxxxxxxxxxxxxxxx
             ▼
 ┌───────────────────────────────┐
 │            G2CSPAY             │
@@ -321,7 +321,7 @@ Untuk production, jalankan polling secara berkala agar transaksi tetap dapat di-
 | **Method**         | `POST`                                   |
 | **Endpoint**       | `/api/admin/poll`                        |
 | **Interval**       | Setiap 1 menit                           |
-| **Authentication** | `Authorization: Bearer rp_live_xxxxxxxxxxxxxxxxxxxx`        |
+| **Authentication** | `X-API-Key: rp_live_xxxxxxxxxxxxxxxxxxxx
 | **Tujuan**         | Menjalankan polling GoBiz secara berkala |
 
 Contoh:
@@ -353,7 +353,7 @@ Namun, cron tetap disarankan karena menjamin proses matching tetap berjalan mesk
 
 ## API v1
 
-Autentikasi: API Key sebagai HTTP Basic (username) atau `Authorization: Bearer rp_live_xxxxxxxxxxxxxxxxxxxx`. Cukup 1 credential (Client Key sudah dihapus). Format gaya Midtrans Core API; detail lengkap di `/docs`.
+Autentikasi: API Key sebagai HTTP Basic (username) atau `X-API-Key: rp_live_xxxxxxxxxxxxxxxxxxxx
 
 | Method | Endpoint                                              | Fungsi                    |
 | ------ | ----------------------------------------------------- | ------------------------- |
