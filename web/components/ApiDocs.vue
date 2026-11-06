@@ -20,7 +20,7 @@
 
       <section id="autentikasi">
         <h2>Autentikasi</h2>
-        <p>Gunakan <b>API Key</b> dari menu Kredensial. Kirim sebagai header X-API-Key (key sebagai username, password dikosongkan), atau sebagai header X-API-Key. Jangan pernah menaruh API Key di kode sisi klien.</p>
+        <p>Gunakan <b>API Key</b> dari menu Kredensial. Kirim sebagai header X-API-Key, atau sebagai header X-API-Key. Jangan pernah menaruh API Key di kode sisi klien.</p>
         <Code :tabs="authTabs" />
         <table>
           <thead><tr><th>Lingkungan</th><th>API Key</th><th>Base path</th></tr></thead>
