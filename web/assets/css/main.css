@@ -222,3 +222,15 @@ h1, h2, h3 { letter-spacing: -0.015em; line-height: 1.25; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
 }
+/* ==== G2C-DARK v1 — biru tua + glass header + tombol rapih (auto-inject) ==== */
+:root,html[data-theme]{--bg:#020617;--bg-soft:#0a1122;--soft:#0a1122;--card:#0e1a33;--line:#1b2b4d;--line-2:#2c4070;--txt:#e7edf8;--dim:#93a5c4;--shadow-rgb:2,6,23;--shadow-sm:0 1px 2px rgba(2,6,23,.5),0 4px 14px rgba(2,6,23,.45);--shadow-md:0 4px 8px rgba(2,6,23,.5),0 20px 50px rgba(2,6,23,.55);--bank-filter:brightness(0) invert(1);color-scheme:dark}
+html,body{background:#020617}
+body{color:#e7edf8}
+header.nav{background:rgba(3,10,28,.72)!important;-webkit-backdrop-filter:blur(14px) saturate(1.35)!important;backdrop-filter:blur(14px) saturate(1.35)!important;border-bottom:1px solid rgba(148,180,255,.16)!important}
+header.nav .links a{color:var(--dim)}
+header.nav .links a:hover{color:#fff}
+.btn-soft{background:rgba(147,197,253,.09)!important;border:1px solid rgba(147,197,253,.3)!important;color:#dbeafe!important;transition:background .2s,color .2s!important}
+.btn-soft:hover{background:rgba(147,197,253,.18)!important;color:#fff!important}
+.btn-grad{box-shadow:0 10px 26px -10px rgba(37,99,235,.8)!important}
+@media (max-width:480px){.cta-nav{gap:6px!important}.btn-soft{padding:8px 14px!important}.btn-grad{padding:9px 16px!important}}
+/* ==/G2C-DARK== */
