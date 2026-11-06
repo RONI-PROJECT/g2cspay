@@ -11,7 +11,7 @@
         <h1>API {{ siteName }}</h1>
         <p>REST API untuk menerima pembayaran QRIS. Request dan response berformat JSON, UTF-8. Semua nominal berupa string dengan dua desimal, mata uang IDR.</p>
         <dl class="kv">
-          <dt>Base URL</dt><dd><code>{{ apiBase }}/api</code></dd>
+          <dt>Base URL</dt><dd><code>{{ apiBase }}</code></dd>
           <dt>Content-Type</dt><dd><code>application/json</code></dd>
           <dt>Zona waktu</dt><dd>WIB (UTC+7), format <code>YYYY-MM-DD HH:mm:ss</code></dd>
           <dt>Contoh</dt><dd><code>POST {{ apiBase }}/api/charge</code></dd>
@@ -20,7 +20,7 @@
 
       <section id="autentikasi">
         <h2>Autentikasi</h2>
-        <p>Gunakan <b>API Key</b> dari menu Kredensial. Kirim sebagai HTTP Basic Auth (key sebagai username, password dikosongkan), atau sebagai Bearer token. Jangan pernah menaruh API Key di kode sisi klien.</p>
+        <p>Gunakan <b>API Key</b> dari menu Kredensial. Kirim sebagai header X-API-Key (key sebagai username, password dikosongkan), atau sebagai header X-API-Key. Jangan pernah menaruh API Key di kode sisi klien.</p>
         <Code :tabs="authTabs" />
         <table>
           <thead><tr><th>Lingkungan</th><th>API Key</th><th>Base path</th></tr></thead>
@@ -189,7 +189,7 @@ const KEY = 'rp_live_xxxxxxxxxxxxxxxx'
 
 const authTabs = computed(() => [
   { name: 'cURL', code: `curl ${B.value}/api/transaction/ORDER-1001/status \\\n  -u ${KEY}:` },
-  { name: 'Header', code: `Authorization: Basic base64("${KEY}:")\n# atau\nAuthorization: Bearer ${KEY}` },
+  { name: 'Header', code: `Authorization: Basic base64("${KEY}:")\n# atau\nX-API-Key: rp_live_xxxxxxxxxxxxxxxxxxxx` },
 ])
 
 const chargeBody = `{
