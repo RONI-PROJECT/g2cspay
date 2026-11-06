@@ -11,7 +11,7 @@
   />
   <img
     v-else-if="!staticFailed"
-    src="/logo.svg"
+    src="/logo.svg?v=6"
     :alt="alt || 'G2CSPAY'"
     :class="$attrs.class"
     @error="staticFailed = true"
