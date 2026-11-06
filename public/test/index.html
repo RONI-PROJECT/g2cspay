@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>G2CSPAY Sandbox Tester</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<style>
+*{box-sizing:border-box}
+body{margin:0;font:13px/1.5 -apple-system,Segoe UI,Roboto,sans-serif;color:#171717;background:#fff}
+.wrap{max-width:880px;margin:0 auto;padding:20px 16px}
+h1{font-size:15px;margin:0 0 4px}
+p.sub{margin:0 0 16px;color:#737373}
+.card{border:1px solid #e5e5e5;border-radius:6px;padding:14px;margin-bottom:12px}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+label{display:block;font-size:12px;color:#525252;margin-bottom:3px}
+input{width:100%;height:32px;border:1px solid #d4d4d4;border-radius:4px;padding:0 9px;font:inherit}
+input:focus{outline:none;border-color:#171717}
+.btns{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+button{height:30px;padding:0 12px;border:1px solid #d4d4d4;background:#fff;border-radius:4px;font:inherit;cursor:pointer}
+button:hover{background:#fafafa}
+button.pri{background:#171717;color:#fff;border-color:#171717}
+.out{display:grid;grid-template-columns:200px 1fr;gap:12px}
+@media(max-width:640px){.out{grid-template-columns:1fr}}
+#qr{width:200px;height:200px;border:1px solid #e5e5e5;border-radius:4px;display:flex;align-items:center;justify-content:center;color:#a3a3a3}
+#qr img{width:100%;height:100%}
+pre{margin:0;padding:10px;background:#fafafa;border:1px solid #e5e5e5;border-radius:4px;overflow:auto;max-height:320px;font:12px/1.5 ui-monospace,Menlo,monospace;white-space:pre-wrap;word-break:break-all}
+.st{display:inline-block;padding:1px 8px;border:1px solid #d4d4d4;border-radius:10px;font-size:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>G2CSPAY Sandbox Tester</h1>
+  <p class="sub">Uji endpoint sandbox gaya Midtrans. Gunakan API Key sandbox (SB-rp_live_...).</p>
+
+  <div class="card">
+    <div class="row">
+      <div><label>API Key sandbox</label><input id="key" placeholder="SB-rp_live_..." autocomplete="off"></div>
+      <div><label>Order ID</label><input id="oid" placeholder="otomatis"></div>
+      <div><label>Gross amount</label><input id="amt" type="number" value="10000" min="1000"></div>
+    </div>
+    <div class="btns">
+      <button class="pri" onclick="charge()">Charge</button>
+      <button onclick="act('status','GET')">Status</button>
+      <button onclick="act('pay','POST')">Simulasi bayar</button>
+      <button onclick="act('expire','POST')">Simulasi expire</button>
+      <button onclick="act('cancel','POST')">Cancel</button>
+      <button onclick="act('notification/resend','POST')">Notifikasi</button>
+    </div>
+  </div>
+
+  <div class="card out">
+    <div id="qr">QR</div>
+    <div>
+      <div style="margin-bottom:8px">Status: <span class="st" id="st">-</span></div>
+      <pre id="log">Belum ada request.</pre>
+    </div>
+  </div>
+</div>
+<script>
+const B = '/api/sandbox';
+const $ = (id) => document.getElementById(id);
+$('key').value = localStorage.getItem('csp_sb_key') || '';
+let current = '';
+
+async function call(path, method, body) {
+  const key = $('key').value.trim();
+  localStorage.setItem('csp_sb_key', key);
+  const r = await fetch(B + path, {
+    method,
+    headers: { 'Content-Type': 'application/json', Authorization: 'X-API-Key ' + key },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  const ct = r.headers.get('content-type') || '';
+  if (ct.includes('image')) return { status_code: String(r.status), image: true };
+  return r.json();
+}
+
+function show(d) {
+  $('log').textContent = JSON.stringify(d, null, 2);
+  if (d.transaction_status) $('st').textContent = d.transaction_status;
+}
+
+async function charge() {
+  const order_id = $('oid').value.trim() || 'ORD-' + Date.now();
+  $('oid').value = order_id;
+  const d = await call('/charge', 'POST', {
+    payment_type: 'qris',
+    transaction_details: { order_id, gross_amount: Number($('amt').value) },
+  });
+  show(d);
+  if (d.order_id) { current = d.order_id; loadQr(); }
+}
+
+async function loadQr() {
+  const key = $('key').value.trim();
+  const r = await fetch(B + '/transaction/' + encodeURIComponent(current) + '/qr', { headers: { Authorization: 'X-API-Key ' + key } });
+  if (!r.ok) return;
+  $('qr').innerHTML = '<img alt="QR">';
+  $('qr').firstChild.src = URL.createObjectURL(await r.blob());
+}
+
+async function act(name, method) {
+  const id = current || $('oid').value.trim();
+  if (!id) return show({ status_message: 'Isi order id atau lakukan charge dulu' });
+  show(await call('/transaction/' + encodeURIComponent(id) + '/' + name, method));
+}
+</script>
+</body>
+</html>
