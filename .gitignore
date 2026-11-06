@@ -18,3 +18,4 @@ output-build.zip
 *.bak*
 *.ts.bak
 .vercel/
+*.bak-*
