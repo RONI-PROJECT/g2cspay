@@ -37,7 +37,7 @@ nav a.on { color: var(--vio); border-bottom-color: var(--vio); font-weight: 600;
 .act { margin-left: auto; display: flex; align-items: center; gap: 8px; }
 .act a { display: inline-flex; align-items: center; justify-content: center; height: 36px; padding: 0 16px; border-radius: 10px; white-space: nowrap; font-size: 13px; font-weight: 600; border: 1px solid var(--line-2); color: var(--txt); background: var(--card); }
 .act a:hover { border-color: var(--vio-mid); color: #fff; }
-.act a.reg { background: linear-gradient(135deg, #1e40af, var(--vio-mid)); border-color: transparent; color: #fff; }
+.act a.reg { background: linear-gradient(135deg, var(--vio), var(--vio-mid)); border-color: transparent; color: #fff; }
 .act a.reg:hover { filter: brightness(1.12); color: #fff; }
 @media (max-width: 640px) { .top-in { padding: 0 16px; gap: 12px; } nav { display: none; } .act a { height: 30px; padding: 0 12px; } }
 </style>

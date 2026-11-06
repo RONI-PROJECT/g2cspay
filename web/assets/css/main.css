@@ -12,14 +12,14 @@
   --line-2: #26366b;
   --txt: #e6ecfb;
   --dim: #94a3c7;
-  --vio: #2f5fe3;
-  --vio-2: #93b4ff;
-  --vio-ink: #b9ccff;   /* teks aksen di atas bg gelap */
-  --vio-deep: #172554;  /* dasar gradien gelap (hero) */
-  --vio-mid: #3b6fee;
-  --vio-rgb: 47,95,227;
+  --vio: #0d9488;
+  --vio-2: #5eead4;
+  --vio-ink: color-mix(in srgb, var(--vio-2) 70%, #fff);   /* teks aksen di atas bg gelap */
+  --vio-deep: #134e4a;  /* dasar gradien gelap (hero) */
+  --vio-mid: #14b8a6;
+  --vio-rgb: 13,148,136;
   --shadow-rgb: 0,0,0;
-  --grad: linear-gradient(135deg, #2a57db, #6366f1);
+  --grad: linear-gradient(135deg, #0d9488, #10b981);
   --shadow-sm: 0 1px 2px rgba(0,0,0,.35), 0 4px 14px rgba(0,0,0,.3);
   --shadow-md: 0 4px 8px rgba(0,0,0,.35), 0 20px 50px rgba(0,0,0,.45);
   --ok: #34d399;
@@ -277,3 +277,17 @@ html .badge--warn { background: rgba(var(--c-amber-rgb),.12); color: var(--c-amb
 
 /* tabel: header berwarna */
 html thead th { color: var(--c-cyan); background: linear-gradient(180deg, rgba(34,211,238,.07), var(--bg-soft)); }
+
+/* Turnstile: wadah & loading ikut tema */
+.turnstile-el, .ts-el {
+  position: relative; width: 100%; max-width: 300px; min-height: 65px; margin-inline: auto;
+  border: 1px solid var(--line-2); border-radius: 12px; overflow: hidden;
+  background: rgba(var(--vio-rgb), .10);
+}
+.turnstile-el::before, .ts-el::before {
+  content: ''; position: absolute; inset: 0; z-index: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(var(--vio-rgb), .28) 50%, transparent 100%);
+  background-size: 200% 100%; animation: tsShimmer 1.4s linear infinite;
+}
+.turnstile-el iframe, .ts-el iframe { position: relative; z-index: 1; display: block; max-width: 100%; }
+@keyframes tsShimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }

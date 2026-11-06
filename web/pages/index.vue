@@ -3,6 +3,7 @@
   <div class="landing">
     <header class="nav" :class="{ 'nav-on': isScrolled }">
       <div class="nav-in">
+        <NuxtLink to="/" class="brand"><SiteLogo /></NuxtLink>
         <nav class="links">
           <a href="#api">API</a>
           <a href="#fitur">Fitur</a>
@@ -10,7 +11,6 @@
           <a href="#alur">Alur</a>
           <NuxtLink to="/docs">Docs</NuxtLink>
         </nav>
-        <NuxtLink to="/" class="brand"><SiteLogo /></NuxtLink>
         <div class="cta-nav">
           <NuxtLink to="/login" class="btn-soft">Masuk</NuxtLink>
           <NuxtLink to="/register" class="btn-grad">Daftar</NuxtLink>
@@ -92,12 +92,8 @@
           <NuxtLink to="/docs" class="btn-ghost-d">Baca dokumentasi</NuxtLink>
         </div>
 
-        <div class="api-shell" v-reveal>
-          <div class="api-tabs">
-            <button v-for="t in Object.keys(snippets)" :key="t" class="api-tab" :class="{ active: tab === t }" @click="tab = t">{{ t }}</button>
-            <button class="api-copy" @click="copyCode">{{ copied ? 'Tersalin' : 'Salin' }}</button>
-          </div>
-          <pre class="api-code"><code>{{ snippets[tab] }}</code></pre>
+        <div v-reveal>
+          <Code :tabs="snippetTabs" />
         </div>
 
         <div class="api-grid">
@@ -239,6 +235,7 @@ let scrollHandler: any = null
 
 const tab = ref('cURL')
 const copied = ref(false)
+const snippetTabs = computed(() => Object.entries(snippets.value).map(([name, code]) => ({ name, code })))
 
 const snippets = computed<Record<string, string>>(() => ({
   cURL: `curl -X POST ${apiBase.value}/api/v2/charge \\
@@ -354,10 +351,10 @@ onBeforeUnmount(() => {
 /* NAV — logo di tengah (grid 3 kolom), bening di atas, glass blur tipis saat scroll */
 .nav { position: sticky; top: 0; z-index: 100; background: transparent; border-bottom: 1px solid transparent; transition: background .3s ease, border-color .3s, box-shadow .3s; }
 .nav-on { background: rgba(7,13,34,.72); backdrop-filter: blur(10px) saturate(150%); -webkit-backdrop-filter: blur(10px) saturate(150%); border-bottom-color: var(--line); box-shadow: 0 6px 24px -16px rgba(var(--shadow-rgb),.35); }
-.nav-in { max-width: 1160px; margin: 0 auto; padding: 0 24px; height: 66px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 16px; }
-.brand { display: flex; align-items: center; flex-shrink: 0; justify-self: center; }
+.nav-in { max-width: 1160px; margin: 0 auto; padding: 0 24px; height: 66px; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 16px; }
+.brand { display: flex; align-items: center; flex-shrink: 0; justify-self: start; }
 .brand :deep(img) { height: 32px; width: auto; display: block; }
-.links { display: flex; gap: 28px; font-size: 13.5px; font-weight: 600; color: var(--dim); justify-self: start; }
+.links { display: flex; gap: 28px; font-size: 13.5px; font-weight: 600; color: var(--dim); justify-self: center; }
 .links a:hover { color: var(--vio); }
 .cta-nav { display: flex; gap: 8px; align-items: center; justify-self: end; }
 .cta-nav .btn-soft, .cta-nav .btn-grad { box-sizing: border-box; height: 40px; padding: 0 20px; display: inline-flex; align-items: center; justify-content: center; font-size: 13.5px; font-weight: 700; line-height: 1; border-radius: 10px; white-space: nowrap; }
@@ -498,8 +495,8 @@ em { font-style: normal; background: var(--grad); -webkit-background-clip: text;
   .api-grid { grid-template-columns: 1fr; }
   .api-code { padding: 16px; font-size: 12px; }
   .links { display: none; }
-  .nav-in { grid-template-columns: 1fr auto 1fr; padding: 0 14px; gap: 8px; height: 60px; }
-  .brand { grid-column: 2; }
+  .nav-in { grid-template-columns: auto 1fr auto; padding: 0 14px; gap: 8px; height: 60px; }
+  .brand { grid-column: 1; justify-self: start; }
   .cta-nav { grid-column: 3; gap: 6px; }
   .cta-nav .btn-soft, .cta-nav .btn-grad { height: 36px; padding: 0 13px; font-size: 12.5px; border-radius: 9px; }
   .hero { padding: 48px 0 64px; }

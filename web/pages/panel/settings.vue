@@ -389,7 +389,7 @@ const THEMES = [
   { key: 'amber', name: 'Amber', hex: '#d97706' }, { key: 'slate', name: 'Slate', hex: '#334155' },
 ]
 const form = reactive({
-  theme_color: 'navy',
+  theme_color: 'teal',
   logo_height: 30,
   bank_logo_shape: 'rounded',
   bank_logo_gray: false,
@@ -443,7 +443,7 @@ async function load() {
       form.site_description = r.data.site_description || ''
       form.site_keywords = r.data.site_keywords || ''
       form.logo_url = r.data.logo_url || ''
-      form.theme_color = r.data.theme_color || 'navy'
+      form.theme_color = r.data.theme_color || 'teal'
       form.logo_height = Number(r.data.logo_height) || 30
       form.bank_logo_shape = r.data.bank_logo_shape || 'rounded'
       form.bank_logo_gray = r.data.bank_logo_gray === true || r.data.bank_logo_gray === 'true'

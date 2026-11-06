@@ -512,8 +512,8 @@ onBeforeUnmount(() => {
   -webkit-font-smoothing: antialiased;
 }
 .bg-glow { position: fixed; pointer-events: none; z-index: 0; border-radius: 50%; filter: blur(120px); }
-.glow-a { width: 520px; height: 520px; top: -200px; left: -140px; background: none; }
-.glow-b { width: 600px; height: 600px; top: 20%; right: -240px; background: none; }
+.glow-a { width: 520px; height: 520px; top: -200px; left: -140px; background: radial-gradient(circle, rgba(var(--vio-rgb),.38), transparent 70%); }
+.glow-b { width: 600px; height: 600px; top: 20%; right: -240px; background: radial-gradient(circle, rgba(var(--vio-rgb),.26), transparent 70%); }
 
 .auth-left { position: relative; z-index: 1; display: flex; align-items: center; justify-content: center; padding: 40px; overflow-y: auto; }
 .auth-box { width: 100%; max-width: 420px; padding: 40px 36px; background: var(--card); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 1px 2px rgba(var(--shadow-rgb),.06); animation: fadeUp 0.6s cubic-bezier(0.22,1,0.36,1) both; position: relative; }
@@ -593,7 +593,7 @@ onBeforeUnmount(() => {
 .footer-link { text-align: center; font-size: 13px; color: var(--dim); }
 .footer-link a { color: var(--vio); font-weight: 750; text-decoration: none; }
 .footer-link a:hover { text-decoration: underline; }
-.auth-right { position: relative; z-index: 1; padding: 60px 56px; display: flex; align-items: center; justify-content: center; overflow: hidden; border-left: 1px solid var(--line); background: none; }
+.auth-right { position: relative; z-index: 1; padding: 60px 56px; display: flex; align-items: center; justify-content: center; overflow: hidden; border-left: 1px solid var(--line); background: linear-gradient(160deg, rgba(var(--vio-rgb),.16), rgba(var(--vio-rgb),.03) 70%); }
 .branding { max-width: 440px; }
 .brand-logo-big { width: 68px; height: 68px; border-radius: 8px; background: var(--grad, var(--vio)); display: flex; align-items: center; justify-content: center; margin-bottom: 32px; padding: 14px; box-shadow: 0 1px 2px rgba(var(--shadow-rgb),.06); }
 .brand-logo-big :deep(img) { width: 100%; height: auto; filter: brightness(0) invert(1); }

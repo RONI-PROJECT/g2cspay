@@ -177,7 +177,7 @@ async function submit() {
   min-height: 100dvh;
   display: flex; align-items: center; justify-content: center;
   padding: 24px;
-  background: none;
+  background: radial-gradient(900px 500px at 12% -10%, rgba(var(--vio-rgb),.28), transparent 60%), radial-gradient(800px 500px at 100% 110%, rgba(var(--vio-rgb),.2), transparent 60%), var(--bg);
   color: var(--txt);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   position: relative;
@@ -192,7 +192,7 @@ async function submit() {
   width: 500px; height: 500px;
   top: -180px; left: -120px;
   border-radius: 50%;
-  background: none;
+  background: radial-gradient(circle, rgba(var(--vio-rgb),.38), transparent 70%);
   filter: blur(120px);
 }
 .glow-b {
@@ -202,7 +202,7 @@ async function submit() {
   width: 600px; height: 600px;
   bottom: -240px; right: -180px;
   border-radius: 50%;
-  background: none;
+  background: radial-gradient(circle, rgba(var(--vio-rgb),.26), transparent 70%);
   filter: blur(140px);
 }
 

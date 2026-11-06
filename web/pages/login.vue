@@ -373,12 +373,12 @@ onBeforeUnmount(() => {
 .glow-a {
   width: 500px; height: 500px;
   top: -180px; left: -120px;
-  background: none;
+  background: radial-gradient(circle, rgba(var(--vio-rgb),.38), transparent 70%);
 }
 .glow-b {
   width: 600px; height: 600px;
   bottom: -240px; right: -180px;
-  background: none;
+  background: radial-gradient(circle, rgba(var(--vio-rgb),.26), transparent 70%);
 }
 
 /* ===== LEFT (FORM) ===== */
@@ -621,7 +621,7 @@ onBeforeUnmount(() => {
   display: flex; align-items: center; justify-content: center;
   overflow: hidden;
   border-left: 1px solid var(--line);
-  background: none;
+  background: linear-gradient(160deg, rgba(var(--vio-rgb),.16), rgba(var(--vio-rgb),.03) 70%);
 }
 .branding { max-width: 440px; position: relative; z-index: 1; }
 .brand-logo-big {
