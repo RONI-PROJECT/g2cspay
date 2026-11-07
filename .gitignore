@@ -17,3 +17,9 @@ node_modules/
 output-build.zip
 *.bak*
 *.ts.bak
+*.zip
+*.patch
+push-env.sh
+test-login.mjs
+patch-*.sh
+backup-*.sh

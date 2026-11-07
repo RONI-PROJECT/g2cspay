@@ -15,6 +15,7 @@ import { webhookTestRoutes } from './routes/webhook-test.js';
 import { sandboxRoutes } from './routes/sandbox.js';
 import { cronRoutes } from './routes/cron.js';
 import { mutasiRoutes } from './routes/mutasi.js';
+import { gobizOtpRoutes } from './routes/gobiz-otp.js';
 import { publicRoutes } from './routes/public.js';
 import { userExtraRoutes } from './routes/user-extra.js';
 import { userPaymentRoutes } from './routes/user-payments.js';
@@ -112,6 +113,7 @@ export function createApp({ merchant = null } = {}) {
    app.use('/api', healthRoutes());
    app.use('/api/cron', cronRoutes(merchant));
    app.use('/api/mutasi', mutasiRoutes());
+   app.use('/api/gobiz', gobizOtpRoutes(guard));
    app.use('/api/auth', authRoutes);
    app.use('/api/user/webhook', webhookLogRoutes());
    app.use('/api/user/webhook-test', webhookTestRoutes());
