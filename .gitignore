@@ -23,3 +23,5 @@ push-env.sh
 test-login.mjs
 patch-*.sh
 backup-*.sh
+.env
+*.zip
