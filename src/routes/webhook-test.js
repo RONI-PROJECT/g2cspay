@@ -20,9 +20,9 @@ export function webhookTestRoutes() {
    router.post('/test', requireUser, async (req, res, next) => {
       try {
          const user = (await one('SELECT "webhookUrl" FROM users WHERE id = $1', [req.user.id])) || {};
-         const kRow = await one(`SELECT key FROM api_keys WHERE "userId" = $1 AND status = 'active' ORDER BY (environment = 'production') DESC, "createdAt" DESC LIMIT 1`, [req.user.id]);
+         const kRow = await one(`SELECT key, secret FROM api_keys WHERE "userId" = $1 AND status = 'active' ORDER BY (environment = 'production') DESC, "createdAt" DESC LIMIT 1`, [req.user.id]);
          user.webhookUrl = (req.body && req.body.url) || user.webhookUrl;
-         user.webhookSecret = kRow?.key;
+         user.webhookSecret = kRow?.secret || kRow?.key;
          if (!user.webhookUrl) return res.status(400).json({ error: 'Webhook URL belum di-set' });
          if (!user.webhookSecret) return res.status(400).json({ error: 'Buat API key dulu' });
 

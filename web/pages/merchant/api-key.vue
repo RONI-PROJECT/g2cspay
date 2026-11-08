@@ -89,6 +89,22 @@
           </div>
         </div>
 
+        <div class="key-field" v-if="k.secret">
+          <label>Webhook Secret</label>
+          <div class="field-row">
+            <code class="key-display" :class="{ revealed: revealedSecId === k.id }">
+              {{ revealedSecId === k.id ? k.secret : maskSecret(k.secret) }}
+            </code>
+            <button class="btn-reveal" @click="revealedSecId = revealedSecId === k.id ? null : k.id">
+              <span>{{ revealedSecId === k.id ? 'Hide' : 'Show' }}</span>
+            </button>
+            <button class="btn-copy" @click="copy(k.secret, 's' + k.id)" :class="{ copied: copiedId === 's' + k.id }">
+              <span>{{ copiedId === 's' + k.id ? 'Copied' : 'Copy' }}</span>
+            </button>
+          </div>
+          <p class="hint">Dipakai untuk signature_key notifikasi webhook (SHA512 order_id + status_code + gross_amount + secret).</p>
+        </div>
+
         <div class="key-meta">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="meta-icon">
             <circle cx="12" cy="12" r="10"/>
@@ -170,6 +186,7 @@ const showCreate = ref(false)
 const creating = ref(false)
 const copiedId = ref<number | string | null>(null)
 const revealedId = ref<string | null>(null)
+const revealedSecId = ref<string | null>(null)
 const form = reactive({ label: '', environment: 'sandbox' })
 const toast = reactive({ show: false, message: '', type: 'success' as 'success' | 'error' })
 
@@ -186,6 +203,10 @@ function maskKey(key: string) {
   if (m) return m[1] + m[2].slice(0, 4) + '*'.repeat(12) + m[2].slice(-4)
   if (key.length <= 12) return key
   return key.substring(0, 6) + '••••' + key.substring(key.length - 4)
+}
+
+function maskSecret(s: string) {
+  return s ? s.slice(0, 10) + '*'.repeat(12) + s.slice(-4) : '-'
 }
 
 function toggleReveal(id: string) {

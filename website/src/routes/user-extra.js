@@ -21,13 +21,20 @@ export function userExtraRoutes() {
       } catch (e) { next(e); }
    }
 
+   const whsec = () => 'whsec_' + Array.from(globalThis.crypto.getRandomValues(new Uint8Array(24)), b => b.toString(16).padStart(2, '0')).join('');
    // ═══ API KEYS ═══
    router.get('/api-keys', requireUser, async (req, res, next) => {
       try {
          const rows = await all(
-            'SELECT id, name, key, status, environment, "lastUsedAt", "createdAt" FROM api_keys WHERE "userId" = $1 ORDER BY "createdAt" DESC',
+            'SELECT id, name, key, secret, status, environment, "lastUsedAt", "createdAt" FROM api_keys WHERE "userId" = $1 ORDER BY "createdAt" DESC',
             [req.user.id]
          );
+         for (const r of rows) {
+            if (!r.secret) {
+               r.secret = whsec();
+               await sql('UPDATE api_keys SET secret = $1 WHERE id = $2', [r.secret, r.id]);
+            }
+         }
          const userRow = await one('SELECT merchant_code FROM users WHERE id = $1', [req.user.id]);
          res.json({
             success: true,
@@ -42,10 +49,10 @@ export function userExtraRoutes() {
          const name = (req.body?.name || 'API Key').slice(0, 100);
          const environment = req.body?.environment === 'sandbox' ? 'sandbox' : 'production';
          const key = newApiKey(environment === 'sandbox');
-         const secret = ''; // 1 credential — kolom secret (Client Key lama) tidak dipakai lagi
+         const secret = whsec(); // 1 credential — kolom secret (Client Key lama) tidak dipakai lagi
          const now = new Date().toISOString();
          const row = await one(
-            'INSERT INTO api_keys ("userId", name, key, secret, environment, "createdAt") VALUES ($1,$2,$3,$4,$5,$6) RETURNING id, name, key, environment, "createdAt"',
+            'INSERT INTO api_keys ("userId", name, key, secret, environment, "createdAt") VALUES ($1,$2,$3,$4,$5,$6) RETURNING id, name, key, secret, environment, "createdAt"',
             [req.user.id, name, key, secret, environment, now]
          );
          res.json({ success: true, data: row });
@@ -60,9 +67,9 @@ export function userExtraRoutes() {
          );
          if (!existing) return res.status(404).json({ error: 'API key tidak ditemukan' });
          const key = newApiKey(existing.environment === 'sandbox');
-         const secret = ''; // 1 credential — Client Key dihapus
+         const secret = whsec(); // 1 credential — Client Key dihapus
          const row = await one(
-            'UPDATE api_keys SET key = $1, secret = $2 WHERE id = $3 RETURNING id, name, key, environment, status, "createdAt"',
+            'UPDATE api_keys SET key = $1, secret = $2 WHERE id = $3 RETURNING id, name, key, secret, environment, status, "createdAt"',
             [key, secret, existing.id]
          );
          res.json({ success: true, data: row });

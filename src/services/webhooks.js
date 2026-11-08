@@ -1,3 +1,4 @@
+import { randomBytes } from 'node:crypto';
 import { config } from '../config.js';
 import { log } from '../logger.js';
 import * as store from '../db/webhooks.js';
@@ -18,8 +19,13 @@ export function buildPayload(trx, secret = config.webhook.secret) {
 async function resolveSecret(trx) {
    if (trx.userId) {
       try {
-         const k = await one(`SELECT key FROM api_keys WHERE "userId" = $1 AND status = 'active' ORDER BY (environment = 'production') DESC, "createdAt" DESC LIMIT 1`, [trx.userId]);
-         if (k?.key) return k.key;
+         const k = await one(`SELECT id, key, secret FROM api_keys WHERE "userId" = $1 AND status = 'active' ORDER BY (environment = 'production') DESC, "createdAt" DESC LIMIT 1`, [trx.userId]);
+         if (k?.key) {
+            if (k.secret) return k.secret;
+            const s = 'whsec_' + randomBytes(24).toString('hex');
+            await sql('UPDATE api_keys SET secret = $1 WHERE id = $2', [s, k.id]);
+            return s;
+         }
       } catch {}
    }
    return config.webhook.secret;
