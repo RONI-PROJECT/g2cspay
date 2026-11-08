@@ -235,7 +235,7 @@ export function userExtraRoutes() {
    // ═══ STATS ═══
    router.get('/stats', requireUser, async (req, res, next) => {
       try {
-         const days = Math.min(Number(req.query.days) || 7, 30);
+         const days = Math.min(Number(req.query.days) || 7, 90);
 
          const [rows, summary] = await Promise.all([
             all('SELECT "createdAt", status, amount FROM transactions WHERE "userId" = $1 AND "createdAt"::timestamptz >= NOW() - ($2 || \' days\')::interval', [req.user.id, days]),
@@ -244,20 +244,20 @@ export function userExtraRoutes() {
 
          const buckets = {};
          for (const r of rows) {
-            const key = new Date(r.createdAt).toISOString().slice(0, 10);
-            if (!buckets[key]) buckets[key] = { paidAmount: 0 };
-            if (r.status === 'PAID') buckets[key].paidAmount += Number(r.amount);
+            const key = new Date(r.createdAt).toLocaleDateString('en-CA', { timeZone: 'Asia/Jakarta' });
+            if (!buckets[key]) buckets[key] = { paidAmount: 0, count: 0 };
+            if (r.status === 'PAID') { buckets[key].paidAmount += Number(r.amount); buckets[key].count += 1; }
          }
 
          const series = [];
          for (let i = days - 1; i >= 0; i--) {
-            const d = new Date();
-            d.setDate(d.getDate() - i);
-            const key = d.toISOString().slice(0, 10);
+            const d = new Date(Date.now() - i * 86400000);
+            const key = d.toLocaleDateString('en-CA', { timeZone: 'Asia/Jakarta' });
             series.push({
                date: key,
-               label: d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' }),
+               label: d.toLocaleDateString('id-ID', { timeZone: 'Asia/Jakarta', day: '2-digit', month: 'short' }),
                paidAmount: buckets[key]?.paidAmount || 0,
+               count: buckets[key]?.count || 0,
             });
          }
 

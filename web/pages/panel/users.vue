@@ -19,6 +19,14 @@
             </svg>
           </button>
         </div>
+        <button class="btn-backup" @click="downloadBackup" title="Download backup ZIP (.env + database)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          <span>Backup ZIP</span>
+        </button>
         <button class="btn-delete-all" @click="showDeleteAll = true" :disabled="list.length === 0">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="3 6 5 6 21 6"/>
@@ -110,9 +118,30 @@
             <span>ID {{ u.id }}</span>
             <span class="meta-dot">·</span>
             <span>Daftar {{ formatDate(u.createdAt) }}</span>
+            <span class="meta-dot">·</span>
+            <span class="saldo-val">Saldo {{ rupiahFmt(u.balance) }}</span>
           </div>
         </div>
         <div class="actions">
+          <button class="btn-action btn-topup" @click="openTopup(u)" title="Top Up Saldo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="6" width="20" height="12" rx="2"/>
+              <circle cx="12" cy="12" r="2.5"/>
+              <path d="M6 12h.01M18 12h.01"/>
+            </svg>
+          </button>
+          <button class="btn-action btn-key" @click="openEdit(u, 'password')" title="Ganti Password">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+          </button>
+          <button class="btn-action btn-mail" @click="openEdit(u, 'email')" title="Ganti Email">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="4" width="20" height="16" rx="2"/>
+              <polyline points="22,6 12,13 2,6"/>
+            </svg>
+          </button>
           <button v-if="u.status === 'active'" class="btn-action btn-ban" @click="openConfirm(u, 'ban')" title="Ban user">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="10"/>
@@ -165,6 +194,96 @@
               <button class="btn-cancel" @click="closeConfirm" :disabled="confirming">Batal</button>
               <button class="btn-confirm" :class="confirmAction === 'ban' ? 'btn-danger-solid' : 'btn-grad'" @click="doConfirm" :disabled="confirming">
                 <span>{{ confirming ? 'Memproses' : (confirmAction === 'ban' ? 'Ban User' : 'Unban User') }}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
+
+    <!-- MODAL EDIT USER (PW/EMAIL) -->
+    <Teleport to="body">
+      <Transition name="modal">
+        <div v-if="editTarget" class="modal-overlay" @click.self="closeEdit">
+          <div class="modal">
+            <div class="modal-head">
+              <div class="modal-icon icon-ok">
+                <svg v-if="editMode === 'password'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="11" width="18" height="11" rx="2"/>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="4" width="20" height="16" rx="2"/>
+                  <polyline points="22,6 12,13 2,6"/>
+                </svg>
+              </div>
+              <div>
+                <h2>{{ editMode === 'password' ? 'Ganti Password' : 'Ganti Email' }}</h2>
+                <p class="modal-sub">{{ editTarget.email }}</p>
+              </div>
+            </div>
+            <div class="modal-body">
+              <div class="tp-field">
+                <label class="tp-label">{{ editMode === 'password' ? 'Password baru (min 6 karakter)' : 'Email baru' }}</label>
+                <input v-model="editValue" :type="editMode === 'password' ? 'password' : 'email'" class="tp-input" :placeholder="editMode === 'password' ? 'password baru' : 'nama@email.com'" @input="editError = ''" />
+              </div>
+              <p v-if="editError" class="tp-error">{{ editError }}</p>
+            </div>
+            <div class="modal-foot">
+              <button class="btn-cancel" @click="closeEdit" :disabled="editBusy">Batal</button>
+              <button class="btn-confirm btn-grad" @click="doEdit" :disabled="editBusy">
+                <span>{{ editBusy ? 'Memproses' : 'Simpan' }}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
+
+    <!-- MODAL TOP UP -->
+    <Teleport to="body">
+      <Transition name="modal">
+        <div v-if="topupTarget" class="modal-overlay" @click.self="closeTopup">
+          <div class="modal">
+            <div class="modal-head">
+              <div class="modal-icon icon-ok">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="6" width="20" height="12" rx="2"/>
+                  <circle cx="12" cy="12" r="2.5"/>
+                  <path d="M6 12h.01M18 12h.01"/>
+                </svg>
+              </div>
+              <div>
+                <h2>Top Up Saldo</h2>
+                <p class="modal-sub">Masuk sebagai transaksi PAID manual, potong fee {{ topupFeePct }}%</p>
+              </div>
+            </div>
+            <div class="modal-body">
+              <div class="user-info">
+                <div class="user-avatar">{{ (topupTarget.name || topupTarget.email || 'U').charAt(0).toUpperCase() }}</div>
+                <div class="user-detail">
+                  <div class="user-name">{{ topupTarget.name || 'Tanpa nama' }}</div>
+                  <div class="user-email">{{ topupTarget.email }}</div>
+                </div>
+              </div>
+              <div class="tp-field">
+                <label class="tp-label">Nominal (gross)</label>
+                <input v-model="topupAmount" type="number" min="100" class="tp-input" placeholder="misal 1000" @input="topupError = ''" />
+              </div>
+              <div class="tp-field">
+                <label class="tp-label">Catatan (opsional)</label>
+                <input v-model="topupNote" type="text" maxlength="200" class="tp-input" placeholder="misal: restore saldo ilang" />
+              </div>
+              <div class="tp-preview">
+                <div class="tp-row"><span>Fee ({{ topupFeePct }}%)</span><strong>-{{ rupiahFmt(topupFee) }}</strong></div>
+                <div class="tp-row tp-net"><span>Net masuk ke user</span><strong>{{ rupiahFmt(topupNet) }}</strong></div>
+              </div>
+              <p v-if="topupError" class="tp-error">{{ topupError }}</p>
+            </div>
+            <div class="modal-foot">
+              <button class="btn-cancel" @click="closeTopup" :disabled="topupBusy">Batal</button>
+              <button class="btn-confirm btn-grad" @click="doTopup" :disabled="topupBusy || topupNet <= 0">
+                <span>{{ topupBusy ? 'Memproses' : 'Top Up Sekarang' }}</span>
               </button>
             </div>
           </div>
@@ -299,6 +418,97 @@ async function doConfirm() {
     alert('Gagal: ' + (e?.data?.error || e.message))
   } finally {
     confirming.value = false
+  }
+}
+
+// Edit user (ganti pw / email) + backup
+const editTarget = ref<any>(null)
+const editMode = ref<'password' | 'email'>('password')
+const editValue = ref('')
+const editBusy = ref(false)
+const editError = ref('')
+function openEdit(u: any, mode: 'password' | 'email') {
+  editTarget.value = u
+  editMode.value = mode
+  editValue.value = ''
+  editError.value = ''
+}
+function closeEdit() {
+  if (editBusy.value) return
+  editTarget.value = null
+}
+async function doEdit() {
+  if (!editTarget.value || editBusy.value) return
+  const v = editValue.value.trim()
+  if (editMode.value === 'password' && v.length < 6) { editError.value = 'Password minimal 6 karakter'; return }
+  if (editMode.value === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) { editError.value = 'Format email tidak valid'; return }
+  editBusy.value = true
+  try {
+    await $fetch(`/api/admin-panel/users/${editTarget.value.id}/${editMode.value === 'password' ? 'password' : 'email'}`, {
+      method: 'POST',
+      credentials: 'include',
+      body: editMode.value === 'password' ? { password: v } : { email: v },
+    })
+    toast.value = `${editTarget.value.email} berhasil diupdate (${editMode.value})`
+    setTimeout(() => toast.value = '', 3000)
+    editTarget.value = null
+    await load()
+  } catch (e: any) {
+    editError.value = 'Gagal: ' + (e?.data?.error || e.message)
+  } finally {
+    editBusy.value = false
+  }
+}
+function downloadBackup() {
+  toast.value = 'Backup disiapkan, download mulai otomatis...'
+  setTimeout(() => toast.value = '', 2500)
+  window.location.href = '/api/admin-panel/backup'
+}
+
+// Top up saldo
+const topupTarget = ref<any>(null)
+const topupAmount = ref('')
+const topupNote = ref('')
+const topupBusy = ref(false)
+const topupError = ref('')
+const topupFeePct = ref(2)
+const topupGross = computed(() => Math.floor(Number(topupAmount.value) || 0))
+const topupFee = computed(() => Math.round(topupGross.value * topupFeePct.value / 100))
+const topupNet = computed(() => Math.max(0, topupGross.value - topupFee.value))
+function openTopup(u: any) {
+  topupTarget.value = u
+  topupAmount.value = ''
+  topupNote.value = ''
+  topupError.value = ''
+}
+function closeTopup() {
+  if (topupBusy.value) return
+  topupTarget.value = null
+}
+function rupiahFmt(n: number) {
+  return 'Rp ' + Number(n || 0).toLocaleString('id-ID')
+}
+async function doTopup() {
+  if (!topupTarget.value || topupBusy.value) return
+  if (!topupGross.value || topupGross.value < 100) {
+    topupError.value = 'Nominal minimal Rp 100'
+    return
+  }
+  topupBusy.value = true
+  try {
+    const r: any = await $fetch(`/api/admin-panel/users/${topupTarget.value.id}/topup`, {
+      method: 'POST',
+      credentials: 'include',
+      body: { amount: topupGross.value, note: topupNote.value },
+    })
+    toast.value = `Top up ${topupTarget.value.email}: +${rupiahFmt(r.data?.net || 0)} net (fee ${rupiahFmt(r.data?.fee || 0)})`
+    setTimeout(() => toast.value = '', 3500)
+    topupTarget.value = null
+    await load()
+  } catch (e: any) {
+    topupError.value = 'Gagal: ' + (e?.data?.error || e.message)
+  } finally {
+    topupBusy.value = false
   }
 }
 
@@ -630,6 +840,37 @@ h1 { font-size: 13px; font-weight: 700; color: var(--txt); letter-spacing: -0.02
   border-color: rgba(16,185,129,0.35);
   color: #059669;
 }
+.btn-topup:hover {
+  background: rgba(59,130,246,0.06);
+  border-color: rgba(59,130,246,0.4);
+  color: #3b82f6;
+}
+.btn-key:hover {
+  background: rgba(245,158,11,0.06);
+  border-color: rgba(245,158,11,0.4);
+  color: #f59e0b;
+}
+.btn-mail:hover {
+  background: rgba(139,92,246,0.06);
+  border-color: rgba(139,92,246,0.4);
+  color: #8b5cf6;
+}
+.saldo-val { color: #10b981; font-weight: 700; }
+.btn-backup {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 9px 14px;
+  border-radius: 8px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  color: var(--dim);
+  font-size: 12px; font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-backup:hover { border-color: rgba(59,130,246,0.5); color: #3b82f6; background: rgba(59,130,246,0.06); }
+.btn-backup svg { width: 14px; height: 14px; }
 
 /* ===== MODAL ===== */
 .modal-overlay {
@@ -899,4 +1140,24 @@ h1 { font-size: 13px; font-weight: 700; color: var(--txt); letter-spacing: -0.02
     animation: none !important;
   }
 }
+/* TOP UP */
+.tp-field { margin-top: 12px; }
+.tp-label { display: block; font-size: 11.5px; font-weight: 700; color: var(--dim, #64748b); margin-bottom: 6px; }
+.tp-input {
+  width: 100%; box-sizing: border-box;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--line, #e2e8f0);
+  background: rgba(15,23,42,0.03);
+  color: var(--txt, #0f172a);
+  font-size: 13.5px; font-weight: 600;
+  font-family: inherit;
+  outline: none;
+}
+.tp-input:focus { border-color: #3b82f6; }
+.tp-preview { margin-top: 14px; padding: 10px 12px; border-radius: 8px; border: 1px dashed var(--line, #e2e8f0); }
+.tp-row { display: flex; justify-content: space-between; font-size: 12px; color: var(--dim, #64748b); padding: 2px 0; }
+.tp-row strong { font-variant-numeric: tabular-nums; color: var(--txt, #0f172a); }
+.tp-net strong { color: #059669; }
+.tp-error { margin: 10px 0 0; font-size: 12px; color: var(--bad, #e11d48); font-weight: 600; }
 </style>

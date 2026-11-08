@@ -16,11 +16,10 @@ export function buildPayload(trx, secret = config.webhook.secret) {
 }
 
 async function resolveSecret(trx) {
-   if (trx.callbackSecret) return trx.callbackSecret;
    if (trx.userId) {
       try {
-         const u = await one('SELECT "webhookSecret" FROM users WHERE id = $1', [trx.userId]);
-         if (u?.webhookSecret) return u.webhookSecret;
+         const k = await one(`SELECT key FROM api_keys WHERE "userId" = $1 AND status = 'active' ORDER BY (environment = 'production') DESC, "createdAt" DESC LIMIT 1`, [trx.userId]);
+         if (k?.key) return k.key;
       } catch {}
    }
    return config.webhook.secret;

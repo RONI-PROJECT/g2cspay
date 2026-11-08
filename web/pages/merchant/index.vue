@@ -270,7 +270,7 @@ async function load() {
     const opt: any = { credentials: 'include' }
     const [b, s, t]: any = await Promise.allSettled([
       $fetch('/api/user/balance', opt),
-      $fetch('/api/user/stats?days=30', opt),
+      $fetch('/api/user/stats?days=90', opt),
       $fetch('/api/user/payment/list', opt),
     ])
     // yang gagal tetap pakai data sebelumnya, tidak diganti 0

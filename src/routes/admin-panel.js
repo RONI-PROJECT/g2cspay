@@ -2,6 +2,8 @@ import { Router } from 'express';
 import crypto from 'node:crypto';
 import { one, all, sql } from '../db/index.js';
 import { verifyTurnstile } from '../services/turnstile.js';
+import { createNotification } from '../services/notifications.js';
+import { hashPassword } from '../services/auth.js';
 import { ensureAssets, ASSET_KEY_RE, ASSET_MIME, MAX_ASSET_BYTES, assetSettingFor } from './assets.js';
 
 const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'admin';
@@ -173,6 +175,159 @@ export function adminPanelRoutes() {
          const flag = req.body?.isAdmin === true;
          await sql(`UPDATE users SET "isAdmin" = $1 WHERE id = $2`, [flag, req.params.id]);
          res.json({ success: true, isAdmin: flag });
+      } catch (e) { next(e); }
+   });
+
+   // TOP UP SALDO MANUAL (restore saldo user)
+   router.post('/users/:id/topup', requireAdmin, async (req, res, next) => {
+      try {
+         const user = await one(`SELECT id, email, name FROM users WHERE id = $1`, [req.params.id]);
+         if (!user) return res.status(404).json({ error: 'User tidak ditemukan' });
+         const amount = Math.floor(Number(req.body?.amount));
+         if (!Number.isFinite(amount) || !Number.isInteger(amount) || amount < 100 || amount > 50000000) {
+            return res.status(400).json({ error: 'Nominal tidak valid (min Rp 100, max Rp 50.000.000)' });
+         }
+         const note = String(req.body?.note || '').slice(0, 200);
+         let feePercent = 2;
+         try {
+            const row = await one(`SELECT value FROM app_settings WHERE key = 'fee_transaction_percent'`);
+            const pct = Number(row?.value);
+            if (Number.isFinite(pct) && pct >= 0) feePercent = pct;
+         } catch {}
+         const fee = Math.round(amount * feePercent / 100);
+         const net = Math.max(0, amount - fee);
+         const A = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+         const trxId = 'CSP-' + Array.from(crypto.randomBytes(10)).map((b) => A[b % A.length]).join('');
+         const now = new Date().toISOString();
+         await sql(
+            `INSERT INTO transactions
+               ("trxId","userId",status,amount,fee,net,"merchantAmount","feePercent",total,"payAmount","qrString","createdAt","expiresAt","paidAt",metadata)
+             VALUES ($1,$2,'PAID',$3,$4,$5,$5,$6,$3,$3,'MANUAL-TOPUP',$7,$7,$7,$8::jsonb)`,
+            [trxId, user.id, amount, fee, net, feePercent, now,
+             JSON.stringify({ topup: true, note: note || undefined, by: 'admin' })]
+         );
+         await sql(`UPDATE users SET balance = balance + $1 WHERE id = $2`, [net, user.id]);
+         await createNotification(user.id, 'payment', 'Saldo tersedia bertambah',
+            'Saldo ditambahkan admin. Saldo Tersedia +Rp ' + net.toLocaleString('id-ID') + '.' + (note ? ' Catatan: ' + note : ''),
+            { trxId, amount, fee, net, topup: true });
+         const u = await one(`SELECT balance FROM users WHERE id = $1`, [user.id]);
+         res.json({ success: true, data: { trxId, amount, fee, feePercent, net, balance: Number(u?.balance || 0) } });
+      } catch (e) { next(e); }
+   });
+
+   router.post('/users/:id/password', requireAdmin, async (req, res, next) => {
+      try {
+         const user = await one(`SELECT id FROM users WHERE id = $1`, [req.params.id]);
+         if (!user) return res.status(404).json({ error: 'User tidak ditemukan' });
+         const pw = String(req.body?.password || '');
+         if (pw.length < 6) return res.status(400).json({ error: 'Password minimal 6 karakter' });
+         await sql(`UPDATE users SET password = $1 WHERE id = $2`, [await hashPassword(pw), req.params.id]);
+         res.json({ success: true });
+      } catch (e) { next(e); }
+   });
+
+   router.post('/users/:id/email', requireAdmin, async (req, res, next) => {
+      try {
+         const user = await one(`SELECT id FROM users WHERE id = $1`, [req.params.id]);
+         if (!user) return res.status(404).json({ error: 'User tidak ditemukan' });
+         const email = String(req.body?.email || '').trim().toLowerCase();
+         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return res.status(400).json({ error: 'Format email tidak valid' });
+         const dup = await one(`SELECT id FROM users WHERE email = $1 AND id <> $2`, [email, req.params.id]);
+         if (dup) return res.status(400).json({ error: 'Email sudah dipakai user lain' });
+         await sql(`UPDATE users SET email = $1 WHERE id = $2`, [email, req.params.id]);
+         res.json({ success: true });
+      } catch (e) { next(e); }
+   });
+
+   // BACKUP ZIP (.env + dump semua tabel)
+   function sqlVal(v) {
+      if (v === null || v === undefined) return 'NULL';
+      if (typeof v === 'number') return String(v);
+      if (typeof v === 'boolean') return v ? 'TRUE' : 'FALSE';
+      if (v instanceof Date) return `'${v.toISOString()}'`;
+      if (typeof v === 'object') return `'${JSON.stringify(v).replace(/'/g, "''")}'`;
+      return `'${String(v).replace(/'/g, "''")}'`;
+   }
+   function crc32(buf) {
+      if (!crc32.table) {
+         crc32.table = new Int32Array(256);
+         for (let n = 0; n < 256; n++) {
+            let c = n;
+            for (let k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+            crc32.table[n] = c;
+         }
+      }
+      let crc = -1;
+      for (let i = 0; i < buf.length; i++) crc = (crc >>> 8) ^ crc32.table[(crc ^ buf[i]) & 0xFF];
+      return (crc ^ -1) >>> 0;
+   }
+   function zipStore(entries) {
+      const chunks = []; const central = []; let offset = 0;
+      const now = new Date();
+      const dosTime = ((now.getHours() & 0x1f) << 11) | ((now.getMinutes() & 0x3f) << 5) | (Math.floor(now.getSeconds() / 2) & 0x1f);
+      const dosDate = (((now.getFullYear() - 1980) & 0x7f) << 9) | (((now.getMonth() + 1) & 0xf) << 5) | (now.getDate() & 0x1f);
+      for (const e of entries) {
+         const nameBuf = Buffer.from(e.name, 'utf8');
+         const crc = crc32(e.data);
+         const lh = Buffer.alloc(30);
+         lh.writeUInt32LE(0x04034b50, 0); lh.writeUInt16LE(20, 4); lh.writeUInt16LE(0x0800, 6);
+         lh.writeUInt16LE(0, 8); lh.writeUInt16LE(dosTime, 10); lh.writeUInt16LE(dosDate, 12);
+         lh.writeUInt32LE(crc, 14); lh.writeUInt32LE(e.data.length, 18); lh.writeUInt32LE(e.data.length, 22);
+         lh.writeUInt16LE(nameBuf.length, 26); lh.writeUInt16LE(0, 28);
+         chunks.push(lh, nameBuf, e.data);
+         const ch = Buffer.alloc(46);
+         ch.writeUInt32LE(0x02014b50, 0); ch.writeUInt16LE(20, 4); ch.writeUInt16LE(20, 6);
+         ch.writeUInt16LE(0x0800, 8); ch.writeUInt16LE(0, 10);
+         ch.writeUInt16LE(dosTime, 12); ch.writeUInt16LE(dosDate, 14);
+         ch.writeUInt32LE(crc, 16); ch.writeUInt32LE(e.data.length, 20); ch.writeUInt32LE(e.data.length, 24);
+         ch.writeUInt16LE(nameBuf.length, 28); ch.writeUInt16LE(0, 30); ch.writeUInt16LE(0, 32);
+         ch.writeUInt16LE(0, 34); ch.writeUInt16LE(0, 36); ch.writeUInt32LE(0, 38); ch.writeUInt32LE(offset, 42);
+         central.push(Buffer.concat([ch, nameBuf]));
+         offset += 30 + nameBuf.length + e.data.length;
+      }
+      const cdBuf = Buffer.concat(central);
+      const eocd = Buffer.alloc(22);
+      eocd.writeUInt32LE(0x06054b50, 0); eocd.writeUInt16LE(0, 4); eocd.writeUInt16LE(0, 6);
+      eocd.writeUInt16LE(entries.length, 8); eocd.writeUInt16LE(entries.length, 10);
+      eocd.writeUInt32LE(cdBuf.length, 12); eocd.writeUInt32LE(offset, 16); eocd.writeUInt16LE(0, 20);
+      return Buffer.concat([...chunks, cdBuf, eocd]);
+   }
+   router.get('/backup', requireAdmin, async (req, res, next) => {
+      try {
+         const skipEnv = (k) => /^(npm_|NODE_|VERCEL_|LAMBDA_|AWS_|LD_)/.test(k) ||
+            ['PATH', 'HOME', 'PWD', 'TMPDIR', 'LANG', 'TZ', 'PORT', 'SHLVL', '_', 'INIT_CWD', 'TERM', 'SHELL', 'USER', 'LOGNAME'].includes(k);
+         const envOut = Object.entries(process.env)
+            .filter(([k]) => !skipEnv(k))
+            .map(([k, v]) => `${k}=${v}`)
+            .sort((a, b) => a.localeCompare(b))
+            .join('\n');
+         let dbSql = '';
+         try {
+            const tables = (await all(`SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'BASE TABLE' ORDER BY table_name`))
+               .map((r) => r.table_name);
+            dbSql = `-- G2CSPAY BACKUP ${new Date().toISOString()}\n-- Restore: jalankan migrations/schema.sql dulu, lalu file ini\nBEGIN;\n`;
+            for (const t of tables) {
+               const rows = await all(`SELECT * FROM "${t}"`);
+               if (!rows.length) { dbSql += `\n-- ${t}: (kosong)\n`; continue; }
+               dbSql += `\n-- ${t} (${rows.length} baris)\n`;
+               for (const row of rows) {
+                  const cols = Object.keys(row).map((c) => `"${c}"`).join(',');
+                  const vals = Object.values(row).map(sqlVal).join(',');
+                  dbSql += `INSERT INTO "${t}" (${cols}) VALUES (${vals}) ON CONFLICT DO NOTHING;\n`;
+               }
+            }
+            dbSql += '\nCOMMIT;\n';
+         } catch (e) { dbSql = '-- DB dump gagal: ' + e.message + '\n'; }
+         const info = JSON.stringify({ app: 'g2cspay', backupAt: new Date().toISOString(), isi: ['.env', 'database.sql', 'info.json'] }, null, 2);
+         const zip = zipStore([
+            { name: '.env', data: Buffer.from(envOut, 'utf8') },
+            { name: 'database.sql', data: Buffer.from(dbSql, 'utf8') },
+            { name: 'info.json', data: Buffer.from(info, 'utf8') },
+         ]);
+         res.setHeader('Content-Type', 'application/zip');
+         res.setHeader('Content-Disposition', `attachment; filename="backup-g2cspay-${new Date().toISOString().slice(0, 10)}.zip"`);
+         res.setHeader('Content-Length', String(zip.length));
+         res.send(zip);
       } catch (e) { next(e); }
    });
 

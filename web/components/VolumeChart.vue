@@ -248,7 +248,7 @@ function rupiah(n: number) {
 function shortRupiah(n: number) {
   if (n >= 1_000_000_000) return (n / 1_000_000_000).toFixed(1) + 'M'
   if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + 'jt'
-  if (n >= 1_000) return (n / 1_000).toFixed(0) + 'rb'
+  if (n >= 1_000) return ((n / 1_000) % 1 === 0 ? (n / 1_000).toFixed(0) : (n / 1_000).toFixed(1)) + 'rb'
   return String(n)
 }
 
@@ -549,7 +549,7 @@ onUnmounted(() => {
 .sum-total {
   font-size: 13px;
   font-weight: 700;
-  color: var(--txt, #0f172a);
+  color: #ffffff;
   letter-spacing: -0.02em;
   font-variant-numeric: tabular-nums;
 }
@@ -653,7 +653,7 @@ onUnmounted(() => {
   margin-top: 3px;
 }
 .tt-row span { color: var(--dim, #64748b); font-size: 11.5px; }
-.tt-row strong { color: var(--vio-deep, #134e4a); font-weight: 700; font-size: 13px; }
+.tt-row strong { color: #ffffff; font-weight: 700; font-size: 13px; }
 
 /* RESPONSIVE */
 @media (max-width: 420px) {

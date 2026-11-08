@@ -25,3 +25,15 @@ patch-*.sh
 backup-*.sh
 .env
 *.zip
+node_modules
+.env
+.env.*
+.nuxt
+.output
+.vercel
+*.zip
+database.sql
+info.json
+cek.txt
+patch-*.mjs
+*.log
